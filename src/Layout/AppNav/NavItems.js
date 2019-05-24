@@ -2,6 +2,100 @@ export const MainNav = [
     {
         icon: 'pe-7s-rocket',
         label: 'Dashboards',
+        to: '#/dashboards/analytics',
+    },
+    {
+        icon: 'pe-7s-rocket',
+        label: 'Users',
+        content: [
+            {
+                label: 'All Users',
+                to: '#/dashboards/analytics',
+            },
+            {
+                label: 'Add New',
+                to: '#/dashboards/commerce',
+            },
+            {
+                label: 'Your Profile',
+                to: '#/dashboards/sales',
+            },
+            {
+                label: 'Roles',
+                to: '#/dashboards/crm',
+            },
+            {
+                label: 'Add New Roles',
+                to: '#/dashboards/crm',
+            },
+            {
+                label: 'Permissions',
+                to: '#/dashboards/crm',
+            },
+            {
+                label: 'Add New Permissions',
+                to: '#/dashboards/crm',
+            }
+
+        ],
+    },
+    {
+        icon: 'pe-7s-rocket',
+        label: 'Lottery',
+        content: [
+            {
+                label: 'All Lottery Slots',
+                to: '#/dashboards/analytics',
+            },
+            {
+                label: 'Add new',
+                to: '#/dashboards/commerce',
+            },
+            {
+                label: 'Winners',
+                to: '#/dashboards/commerce',
+            },
+            {
+                label: 'Settings',
+                to: '#/dashboards/sales',
+            },
+        ],
+    },
+    {
+        icon: 'pe-7s-rocket',
+        label: 'Wallet',
+        content: [
+            {
+                label: 'All Wallets',
+                to: '#/dashboards/analytics',
+            },
+            {
+                label: 'Add New',
+                to: '#/dashboards/commerce',
+            },
+            {
+                label: 'Withdrawal Requests',
+                to: '#/dashboards/sales',
+            },
+        ],
+    },
+    {
+        icon: 'pe-7s-rocket',
+        label: 'Pages',
+        content: [
+            {
+                label: 'All Pages',
+                to: '#/dashboards/analytics',
+            },
+            {
+                label: 'Add New',
+                to: '#/dashboards/commerce',
+            },
+        ],
+    },
+    {
+        icon: 'pe-7s-rocket',
+        label: 'Dashboards',
         content: [
             {
                 label: 'Analytics',
