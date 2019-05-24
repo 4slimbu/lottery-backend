@@ -6,16 +6,18 @@ import {
     ToastContainer,
 } from 'react-toastify';
 
-const UserPages = lazy(() => import('../../DemoPages/UserPages'));
-const Applications = lazy(() => import('../../DemoPages/Applications'));
-const Dashboards = lazy(() => import('../../DemoPages/Dashboards'));
 
-const Widgets = lazy(() => import('../../DemoPages/Widgets'));
-const Elements = lazy(() => import('../../DemoPages/Elements'));
-const Components = lazy(() => import('../../DemoPages/Components'));
-const Charts = lazy(() => import('../../DemoPages/Charts'));
-const Forms = lazy(() => import('../../DemoPages/Forms'));
-const Tables = lazy(() => import('../../DemoPages/Tables'));
+const Users = lazy(() => import('../../Modules/Users'));
+const UserPages = lazy(() => import('../../Modules/UserPages'));
+const Applications = lazy(() => import('../../Modules/Applications'));
+const Dashboards = lazy(() => import('../../Modules/Dashboards'));
+
+const Widgets = lazy(() => import('../../Modules/Widgets'));
+const Elements = lazy(() => import('../../Modules/Elements'));
+const Components = lazy(() => import('../../Modules/Components'));
+const Charts = lazy(() => import('../../Modules/Charts'));
+const Forms = lazy(() => import('../../Modules/Forms'));
+const Tables = lazy(() => import('../../Modules/Tables'));
 
 const AppMain = () => {
 
@@ -175,7 +177,7 @@ const AppMain = () => {
                             <Loader type="ball-grid-beat"/>
                         </div>
                         <h6 className="mt-3">
-                            Please wait while we load all the Dashboards examples
+                            Please wait while we load all the Dashboards Components
                             <small>Because this is a demonstration, we load at once all the Dashboards examples. This wouldn't happen in a real live app!</small>
                         </h6>
                     </div>
@@ -184,8 +186,24 @@ const AppMain = () => {
                 <Route path="/dashboards" component={Dashboards}/>
             </Suspense>
 
+            <Suspense fallback={
+                <div className="loader-container">
+                    <div className="loader-container-inner">
+                        <div className="text-center">
+                            <Loader type="ball-grid-beat"/>
+                        </div>
+                        <h6 className="mt-3">
+                            Please wait while we load all the User Components
+                            <small>Because this is a demonstration, we load at once all the Dashboards examples. This wouldn't happen in a real live app!</small>
+                        </h6>
+                    </div>
+                </div>
+            }>
+                <Route path="/users" component={Users}/>
+            </Suspense>
+
             <Route exact path="/" render={() => (
-                <Redirect to="/dashboards/crm"/>
+                <Redirect to="/dashboards"/>
             )}/>
             <ToastContainer/>
         </Fragment>

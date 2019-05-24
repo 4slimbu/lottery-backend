@@ -163,7 +163,7 @@ export default class CommerceDashboard1 extends Component {
                             <Card className="main-card mb-3">
                                 <CardBody>
                                     <CardTitle>
-                                        Income Report
+                                        User Stats
                                     </CardTitle>
                                     <IncomeReport/>
                                 </CardBody>

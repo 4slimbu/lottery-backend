@@ -1,20 +1,20 @@
 export const MainNav = [
     {
-        icon: 'pe-7s-rocket',
+        icon: 'pe-7s-graph2',
         label: 'Dashboards',
-        to: '#/dashboards/analytics',
+        to: '#/dashboards',
     },
     {
-        icon: 'pe-7s-rocket',
+        icon: 'pe-7s-id',
         label: 'Users',
         content: [
             {
                 label: 'All Users',
-                to: '#/dashboards/analytics',
+                to: '#/users/all',
             },
             {
                 label: 'Add New',
-                to: '#/dashboards/commerce',
+                to: '#/users/new',
             },
             {
                 label: 'Your Profile',
@@ -40,7 +40,7 @@ export const MainNav = [
         ],
     },
     {
-        icon: 'pe-7s-rocket',
+        icon: 'pe-7s-display1',
         label: 'Lottery',
         content: [
             {
@@ -80,7 +80,7 @@ export const MainNav = [
         ],
     },
     {
-        icon: 'pe-7s-rocket',
+        icon: 'pe-7s-browser',
         label: 'Pages',
         content: [
             {
@@ -93,6 +93,38 @@ export const MainNav = [
             },
         ],
     },
+    {
+        icon: 'pe-7s-browser',
+        label: 'Auth',
+        content: [
+            {
+                label: 'Login',
+                to: '#/pages/login',
+            },
+            {
+                label: 'Login Boxed',
+                to: '#/pages/login-boxed',
+            },
+            {
+                label: 'Register',
+                to: '#/pages/register',
+            },
+            {
+                label: 'Register Boxed',
+                to: '#/pages/register-boxed',
+            },
+            {
+                label: 'Forgot Password',
+                to: '#/pages/forgot-password',
+            },
+            {
+                label: 'Forgot Password Boxed',
+                to: '#/pages/forgot-password-boxed',
+            },
+        ],
+    },
+];
+export const MainNavOld = [
     {
         icon: 'pe-7s-rocket',
         label: 'Dashboards',

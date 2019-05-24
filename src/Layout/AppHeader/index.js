@@ -38,14 +38,14 @@ class Header extends React.Component {
                         "app-header__content",
                         {'header-mobile-open': enableMobileMenuSmall},
                     )}>
-                        <div className="app-header-left">
-                            <SearchBox/>
-                            <MegaMenu/>
-                        </div>
+                        {/*<div className="app-header-left">*/}
+                            {/*<SearchBox/>*/}
+                            {/*<MegaMenu/>*/}
+                        {/*</div>*/}
                         <div className="app-header-right">
-                            <HeaderDots/>
+                            {/*<HeaderDots/>*/}
                             <UserBox/>
-                            <HeaderRightDrawer/>
+                            {/*<HeaderRightDrawer/>*/}
                         </div>
                     </div>
                 </ReactCSSTransitionGroup>
