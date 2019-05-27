@@ -18,23 +18,23 @@ export const MainNav = [
             },
             {
                 label: 'Your Profile',
-                to: '#/dashboards/sales',
+                to: '#/users/profile',
             },
             {
                 label: 'Roles',
-                to: '#/dashboards/crm',
+                to: '#/users/roles',
             },
             {
                 label: 'Add New Roles',
-                to: '#/dashboards/crm',
+                to: '#/users/roles/new',
             },
             {
                 label: 'Permissions',
-                to: '#/dashboards/crm',
+                to: '#/users/permissions',
             },
             {
                 label: 'Add New Permissions',
-                to: '#/dashboards/crm',
+                to: '#/users/permissions/new',
             }
 
         ],

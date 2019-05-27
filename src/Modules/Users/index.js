@@ -3,6 +3,11 @@ import {Route} from 'react-router-dom';
 
 import AllUsers from "./AllUsers";
 import NewUser from "./NewUser";
+import Profile from "./Profile";
+import Roles from "./Roles";
+import AddNewRole from "./AddNewRole";
+import AddNewPermission from "./AddNewPermission";
+import Permissions from "./Permissions";
 
 // Layout
 
@@ -14,6 +19,8 @@ import AppFooter from '../../Layout/AppFooter/';
 
 import ThemeOptions from '../../Layout/ThemeOptions/';
 
+
+
 const Users = ({match}) => (
     <Fragment>
         <ThemeOptions/>
@@ -24,6 +31,11 @@ const Users = ({match}) => (
                 <div className="app-main__inner">
                     <Route path={`${match.url}/all`} component={AllUsers}/>
                     <Route path={`${match.url}/new`} component={NewUser}/>
+                    <Route path={`${match.url}/profile`} component={Profile}/>
+                    <Route path={`${match.url}/roles/new`} component={AddNewRole}/>
+                    <Route path={`${match.url}/roles`} component={Roles}/>
+                    <Route path={`${match.url}/permissions/new`} component={AddNewPermission}/>
+                    <Route path={`${match.url}/permissions`} component={Permissions}/>
                 </div>
                 <AppFooter/>
             </div>
