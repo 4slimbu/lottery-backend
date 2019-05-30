@@ -8,9 +8,32 @@ import './assets/base.scss';
 import Main from './Modules/Main';
 import configureStore from './config/configureStore';
 import { Provider } from 'react-redux';
+import jwt_decode from "jwt-decode";
+import setAuthorizationToken from "./utils/axios/setAuthorizationToken";
+import {setAuth} from "./actions/authActions";
 
 const store = configureStore();
 const rootElement = document.getElementById('root');
+
+// check if jwtToken exist in local storage and is valid
+if (localStorage.getItem("jwtToken")) {
+    try {
+        const decodedToken = jwt_decode(localStorage.getItem("jwtToken"));
+        if (decodedToken.exp > (new Date().getTime() / 1000)) {
+            setAuthorizationToken(localStorage.getItem("jwtToken"));
+            store.dispatch(setAuth(decodedToken));
+        } else {
+            localStorage.removeItem("jwtToken");
+            setAuthorizationToken(false);
+            store.dispatch(setAuth({}));
+        }
+    } catch (err) {
+        localStorage.removeItem("jwtToken");
+        setAuthorizationToken(false);
+        store.dispatch(setAuth({}));
+    }
+}
+
 
 const renderApp = Component => {
     ReactDOM.render(
