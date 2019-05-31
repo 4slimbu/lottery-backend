@@ -30,6 +30,9 @@ export function makeRequest(apiCallFunction, data = {}, options={isSilent: false
                         handleSuccessResponseData(dispatch, response.data, options.isSilent);
                         resolve(response.data);
                     }
+                    if (response) {
+                        resolve(response.data);
+                    }
                 },
                 (error) => {
                     if (! options.isSilent) dispatch(deleteLoadingMessage());

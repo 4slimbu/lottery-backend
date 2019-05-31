@@ -1,4 +1,5 @@
 export const ROUTES = {
+    BASE_API_URL: "http://lottery-api.test/api/v1",
     HOME: "/",
     LEVEL_ONE: "/level/getting-started",
     LEVEL_TWO: "/level/setting-the-foundations",

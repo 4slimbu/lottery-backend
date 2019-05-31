@@ -25,6 +25,9 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 
 import city3 from '../../../assets/utils/images/dropdown-header/city3.jpg';
 import avatar1 from '../../../assets/utils/images/avatars/1.jpg';
+import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
+import {logout} from "../../../actions/authActions";
 
 class UserBox extends React.Component {
     constructor(props) {
@@ -33,6 +36,7 @@ class UserBox extends React.Component {
             active: false,
         };
 
+        this.logoutHandler = this.logoutHandler.bind(this);
     }
 
     notify2 = () => this.toastId = toast("You don't have any new items in your calendar for today! Go out and play!", {
@@ -43,6 +47,12 @@ class UserBox extends React.Component {
         type: 'success'
     });
 
+    logoutHandler() {
+        const {logout, history} = this.props;
+
+        logout();
+        history.push('/');
+    }
 
     render() {
 
@@ -82,7 +92,9 @@ class UserBox extends React.Component {
                                                             </div>
                                                             <div className="widget-content-right mr-2">
                                                                 <Button className="btn-pill btn-shadow btn-shine"
-                                                                        color="focus">
+                                                                        color="focus"
+                                                                        onClick={this.logoutHandler}
+                                                                >
                                                                     Logout
                                                                 </Button>
                                                             </div>
@@ -182,4 +194,12 @@ class UserBox extends React.Component {
     }
 }
 
-export default UserBox;
+function mapStateToProps(state) {
+    return {
+        auth: state.authReducer,
+    }
+}
+
+export default withRouter(connect(mapStateToProps, {
+    logout,
+})(UserBox));

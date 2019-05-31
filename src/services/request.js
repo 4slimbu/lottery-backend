@@ -1,5 +1,7 @@
 import * as axios from "axios";
 import {apiBaseUrl, getEnv, newsFeedApiBaseUrl} from "../utils/helper/helperFunctions";
+
+const API_BASE_URL = "http://lottery-api.test/api/v1";
 /**
  * This handles all the api request. If REACT_APP_ENV = mock-api, then the data
  * is faked and returned as async promise object using mock data.
@@ -32,17 +34,17 @@ const requests = (type, url, userData = {}) => {
  */
 const Auth = {
     login: (data) =>
-        requests('POST', apiBaseUrl("/user/login"), data),
-    logout: (data) =>
-        requests('POST', apiBaseUrl("/user/logout"), data),
+        requests('POST', API_BASE_URL + "/login", data),
+    logout: () =>
+        requests('PUT', API_BASE_URL + "/logout"),
     register: (data) =>
         requests('POST', apiBaseUrl("/user/register"), data),
     save: (data) =>
         requests('PUT', apiBaseUrl("/user"), data),
     forgotPassword: (data) =>
-        requests('POST', apiBaseUrl("/user/send-forgot-password-email"), data),
-    updatePassword: (data) =>
-        requests('POST', apiBaseUrl("/user/update-password"), data),
+        requests('POST', API_BASE_URL + "/forgot-password", data),
+    resetPassword: (data) =>
+        requests('PUT', API_BASE_URL + "/reset-password", data),
     sendVerificationEmail: () =>
         requests('GET', apiBaseUrl("/user/send-verification-email")),
     verifyEmail: (data) =>

@@ -99,27 +99,27 @@ export const MainNav = [
         content: [
             {
                 label: 'Login',
-                to: '#/pages/login',
+                to: '#/auth/login',
             },
             {
                 label: 'Login Boxed',
-                to: '#/pages/login-boxed',
+                to: '#/auth/login-boxed',
             },
             {
                 label: 'Register',
-                to: '#/pages/register',
+                to: '#/auth/register',
             },
             {
                 label: 'Register Boxed',
-                to: '#/pages/register-boxed',
+                to: '#/auth/register-boxed',
             },
             {
                 label: 'Forgot Password',
-                to: '#/pages/forgot-password',
+                to: '#/auth/forgot-password',
             },
             {
                 label: 'Forgot Password Boxed',
-                to: '#/pages/forgot-password-boxed',
+                to: '#/auth/forgot-password-boxed',
             },
         ],
     },
