@@ -58,6 +58,14 @@ const Auth = {
 /**
  * Handles all Business related requests
  */
+const Users = {
+    get: (query) =>
+        requests('GET', API_BASE_URL + "/users?" + query),
+};
+
+/**
+ * Handles all Business related requests
+ */
 const Business = {
     get: () =>
         requests('GET', apiBaseUrl("/user/business")),
@@ -124,6 +132,7 @@ const AppSettings = {
 
 export default {
     Auth,
+    Users,
     Business,
     BusinessCategory,
     Level,
