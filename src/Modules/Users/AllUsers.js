@@ -220,6 +220,7 @@ class AllUsers extends React.Component {
                                                             </div>
                                                         ),
                                                         filterable: false,
+                                                        sortable: false
                                                     }
                                                 ]
                                             }
