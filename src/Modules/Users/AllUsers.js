@@ -5,25 +5,27 @@ import {withRouter} from "react-router-dom";
 import {connect} from "react-redux";
 import {makeRequest} from "../../actions/requestAction";
 import request from "../../services/request";
+import * as _ from "lodash";
+import SweetAlert from 'sweetalert-react';
+import Rodal from 'rodal';
+import {Loader} from 'react-loaders';
 
 import {
+    Button,
     Card,
     CardBody,
     Col,
     DropdownItem,
     DropdownMenu,
-    DropdownToggle,
+    DropdownToggle, FormGroup, ModalBody, ModalFooter, ModalHeader,
     Row,
     UncontrolledButtonDropdown
 } from 'reactstrap';
 
 import ReactTable from "react-table";
 import PageTitle from '../../Layout/AppMain/PageTitle';
-
-import avatar2 from '../../assets/utils/images/avatars/2.jpg';
-
-import {makeData} from "./utils";
 import {MESSAGES} from "../../constants/messages";
+import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
 
 
 class AllUsers extends React.Component {
@@ -31,18 +33,62 @@ class AllUsers extends React.Component {
         super();
         this.state = {
             data: [],
-            pages: 300,
+            pages: 1,
             perPage: 10,
-            isLoading: false
+            isLoading: false,
+            isUpdating: false,
+            selectedIds: [],
+            showQuickEditBox: false,
+            showDeleteConfirmationBox: false,
+            showDeleteCompletionBox: false,
+            reactTableState: {},
+            quickEdit: {
+                status: 0
+            }
         };
 
         this.getActionsHeader = this.getActionsHeader.bind(this);
-        this.handleSelect = this.handleSelect.bind(this);
+        this.handleSelectAll = this.handleSelectAll.bind(this);
+        this.handleIndividualSelect = this.handleIndividualSelect.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.showDeleteConfirmationBox = this.showDeleteConfirmationBox.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.showQuickEditBox = this.showQuickEditBox.bind(this);
+        this.cancelQuickEdit = this.cancelQuickEdit.bind(this);
+        this.handleQuickEdit = this.handleQuickEdit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
-    handleSelect () {
+    handleSelectAll() {
+        const totalIds = _.map(this.state.data, 'id');
+        const selectedIds = this.state.selectedIds;
 
+        if (totalIds.length === selectedIds.length) {
+            this.setState({selectedIds: []});
+        } else {
+            this.setState({selectedIds: totalIds});
+        }
+    }
+
+    handleIndividualSelect(id) {
+        let selectedIds = [...this.state.selectedIds];
+        let index = selectedIds.indexOf(id);
+
+        if (index !== -1) {
+            selectedIds.splice(index, 1);
+        } else {
+            selectedIds.push(id);
+        }
+
+        this.setState({selectedIds: selectedIds});
+    }
+
+    handleChange(e) {
+        this.setState({
+            quickEdit: {
+                [e.target.name]: e.target.value
+            }
+        });
     }
 
     getActionsHeader = () => {
@@ -54,15 +100,11 @@ class AllUsers extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu
                     className="rm-pointers dropdown-menu-hover-link">
-                    <DropdownItem>
-                        <i className="dropdown-icon lnr-book"> </i>
-                        <span>Activate</span>
-                    </DropdownItem>
-                    <DropdownItem>
+                    <DropdownItem onClick={() => this.showQuickEditBox()}>
                         <i className="dropdown-icon lnr-inbox"> </i>
-                        <span>Edit</span>
+                        <span>Quick Edit</span>
                     </DropdownItem>
-                    <DropdownItem>
+                    <DropdownItem onClick={() => this.showDeleteConfirmationBox()}>
                         <i className="dropdown-icon lnr-file-empty"> </i>
                         <span>Delete</span>
                     </DropdownItem>
@@ -72,37 +114,127 @@ class AllUsers extends React.Component {
         return <div> Actions {dropDown} </div>;
     };
 
-    async fetchData(state, instance) {
-        const query = "";
-        console.log(state, instance);
+    async fetchData(state, instance = null) {
+        let query = "";
+        this.setState({reactTableState: state});
+
+        //If fetchData is already running, return
+        if (this.state.isLoading) {
+            return;
+        }
+
+        // Go to page
+        if (state.page) {
+            query += "&page=" + (state.page + 1);
+        }
+
+        // Sorting
+        if (state.sorted.length > 0) {
+            query += "&orderBy=" + state.sorted[0].id;
+            query += "&ascending=" + (state.sorted[0].desc ? "false" : "true");
+        }
+
+        // Limit
+        if (state.pageSize) {
+            query += "&limit=" + state.pageSize;
+        }
+
+        // if filter is on and doesn't have at least 2 characters, abort
+        if (state.filtered.length > 0 && state.filtered[0].value.length < 2) {
+            return;
+        }
+
+        // filter only after having at least 2 characters
+        if (state.filtered.length > 0 && state.filtered[0].value.length > 1) {
+            query += "&" + state.filtered[0].id + "=" + state.filtered[0].value
+        }
+
+        // Start loading indicator and call api
         this.setState({isLoading: true});
+
         await this.props.makeRequest(request.Users.get, query, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
-                console.log("all users get response", responseData);
                 if (responseData.data) {
                     this.setState({
                         data: responseData.data,
-                        pages: responseData.meta.total,
-                        isLoading: false
+                        pages: responseData.meta.last_page,
+                        isLoading: false,
+                        selectedIds: []
                     });
                 } else {
                     this.setState({
                         data: [],
                         pages: 0,
-                        isLoading: false
+                        isLoading: false,
+                        selectedIds: []
                     });
                 }
             },
             (errorData) => {
-                this.setState({error: errorData.message});
-                this.resetFields();
+                this.setState({isLoading: false});
+            }
+        );
+    }
+
+    showDeleteConfirmationBox(id = null) {
+        if (id) {
+            this.setState({selectedIds: [id]});
+        }
+        this.setState({showDeleteConfirmationBox: true });
+    }
+
+    showQuickEditBox(id = null) {
+        if (id) {
+            this.setState({selectedIds: [id]});
+        }
+        this.setState({showQuickEditBox: true});
+    }
+
+    cancelQuickEdit() {
+        this.setState({showQuickEditBox: false});
+    }
+
+    async handleQuickEdit() {
+        const data = {
+            user_ids: this.state.selectedIds,
+            is_active: this.state.quickEdit.status
+        };
+
+        this.setState({isUpdating: true});
+
+        await this.props.makeRequest(request.Users.update, data, {message: MESSAGES.LOGGING}).then(
+            (responseData) => {
+                this.setState({isUpdating: false});
+                this.fetchData(this.state.reactTableState);
+            },
+            (errorData) => {
+                this.setState({isUpdating: false});
+            }
+        );
+
+    }
+
+    async handleDelete() {
+        this.setState({isLoading: true});
+        this.setState({showDeleteConfirmationBox: false });
+
+        const data = {
+            user_ids: this.state.selectedIds
+        };
+
+        await this.props.makeRequest(request.Users.delete, data, {message: MESSAGES.LOGGING}).then(
+            (responseData) => {
+                this.setState({isLoading: false});
+                this.fetchData(this.state.reactTableState);
+            },
+            (errorData) => {
                 this.setState({isLoading: false});
             }
         );
     }
 
     render() {
-        const {data, pages, perPage, isLoading} = this.state;
+        const {data, pages, perPage, isLoading, isUpdating, quickEdit} = this.state;
 
         return (
             <Fragment>
@@ -130,10 +262,19 @@ class AllUsers extends React.Component {
                                             {
                                                 columns: [
                                                     {
-                                                        Header: <input type="checkbox" />,
-                                                        Cell: <input type="checkbox" />,
+                                                        Header: <input type="checkbox"
+                                                                       checked={this.state.selectedIds.length > 0}
+                                                                       onChange={this.handleSelectAll}/>,
+                                                        Cell: props => (
+                                                            <div>
+                                                                <input type="checkbox"
+                                                                       checked={this.state.selectedIds.includes(props.original.id)}
+                                                                       onChange={() => this.handleIndividualSelect(props.original.id)}/>
+                                                            </div>
+                                                        ),
                                                         filterable: false,
-                                                        width: 40
+                                                        width: 40,
+                                                        sortable: false,
                                                     },
                                                 ]
                                             },
@@ -144,12 +285,12 @@ class AllUsers extends React.Component {
                                                         accessor: 'full_name',
                                                         Cell: props => (
                                                             <div>
-                                                                { console.log('prosp', props)}
                                                                 <div className="widget-content p-0">
                                                                     <div className="widget-content-wrapper">
                                                                         <div className="widget-content-left mr-3">
                                                                             <div className="widget-content-left">
-                                                                                <img width={52} className="rounded-circle"
+                                                                                <img width={52}
+                                                                                     className="rounded-circle"
                                                                                      src={props.original.profile_pic}
                                                                                      alt=""/>
                                                                             </div>
@@ -173,7 +314,7 @@ class AllUsers extends React.Component {
                                                         accessor: 'roles',
                                                         Cell: row => (
                                                             <div className="d-block w-100 text-center">
-                                                                { row.value && row.value[0].label }
+                                                                {row.value && row.value[0].label}
                                                             </div>
                                                         ),
                                                     },
@@ -182,7 +323,7 @@ class AllUsers extends React.Component {
                                                         accessor: 'is_active',
                                                         Cell: row => (
                                                             <div className="d-block w-100 text-center">
-                                                                { row.value ? 'Active' : 'Inactive' }
+                                                                {row.value ? 'Active' : 'Inactive'}
                                                             </div>
                                                         ),
                                                     },
@@ -193,7 +334,7 @@ class AllUsers extends React.Component {
                                                     {
                                                         Header: this.getActionsHeader,
                                                         accessor: 'actions',
-                                                        Cell: row => (
+                                                        Cell: props => (
                                                             <div className="d-block w-100 text-center">
                                                                 <UncontrolledButtonDropdown>
                                                                     <DropdownToggle caret
@@ -203,15 +344,15 @@ class AllUsers extends React.Component {
                                                                     </DropdownToggle>
                                                                     <DropdownMenu
                                                                         className="rm-pointers dropdown-menu-hover-link">
-                                                                        <DropdownItem>
-                                                                            <i className="dropdown-icon lnr-book"> </i>
-                                                                            <span>Activate</span>
+                                                                        <DropdownItem onClick={() => this.showQuickEditBox(props.original.id)}>
+                                                                            <i className="dropdown-icon lnr-inbox"> </i>
+                                                                            <span>Quick Edit</span>
                                                                         </DropdownItem>
-                                                                        <DropdownItem>
+                                                                        <DropdownItem onClick={() => this.showQuickEditBox(props.original.id)}>
                                                                             <i className="dropdown-icon lnr-inbox"> </i>
                                                                             <span>Edit</span>
                                                                         </DropdownItem>
-                                                                        <DropdownItem>
+                                                                        <DropdownItem onClick={() => this.showDeleteConfirmationBox(props.original.id)}>
                                                                             <i className="dropdown-icon lnr-file-empty"> </i>
                                                                             <span>Delete</span>
                                                                         </DropdownItem>
@@ -225,7 +366,7 @@ class AllUsers extends React.Component {
                                                 ]
                                             }
                                         ]}
-                                        // manual // Forces table not to paginate or sort automatically, so we can handle it server-side
+                                        manual // Forces table not to paginate or sort automatically, so we can handle it server-side
                                         pages={pages} // Display the total number of pages
                                         loading={isLoading} // Display the loading overlay when we need it
                                         onFetchData={this.fetchData} // Request new data when things change
@@ -237,6 +378,68 @@ class AllUsers extends React.Component {
                             </Card>
                         </Col>
                     </Row>
+                    <SweetAlert
+                        title="Are you sure?"
+                        confirmButtonColor=""
+                        show={this.state.showDeleteConfirmationBox}
+                        text="You will not be able to recover these data!"
+                        type="success"
+                        showCancelButton
+                        onConfirm={this.handleDelete}
+                        onCancel={() => this.setState({showDeleteConfirmationBox: false})}/>
+
+                    <SweetAlert
+                        title="Deleted"
+                        confirmButtonColor=""
+                        show={this.state.showDeleteCompletionBox}
+                        text="Your imaginary file has been deleted."
+                        type="success"
+                        onConfirm={() => this.setState({showDeleteConfirmationBox: false, showDeleteCompletionBox: false})}/>
+
+                    <SweetAlert
+                        title="Deleted"
+                        confirmButtonColor=""
+                        show={this.state.showEmptySelect}
+                        text="Your imaginary file has been deleted."
+                        type="danger"
+                        onConfirm={() => this.setState({showDeleteConfirmationBox: false, showDeleteCompletionBox: false})}/>
+
+                    <Rodal visible={this.state.showQuickEditBox}
+                           onClose={this.cancelQuickEdit}
+                           animation={"fade"}
+                           showMask={true}
+                    >
+                        <ModalHeader>Quick Edit</ModalHeader>
+                        <ModalBody>
+                            <AvForm onSubmit={this.handleLogin}>
+                                <Row form>
+                                    <Col md={12}>
+                                        <FormGroup>
+                                            <AvGroup>
+                                                <AvField type="select" name="status" label="Status"
+                                                         onChange={this.handleChange}
+                                                         value={quickEdit.status}
+                                                >
+                                                    <option value={0}>In Active</option>
+                                                    <option value={1}>Active</option>
+                                                </AvField>
+                                            </AvGroup>
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                            </AvForm>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="link" onClick={this.cancelQuickEdit}>Cancel</Button>
+                            <Button color="primary" onClick={this.handleQuickEdit}>
+                                { isUpdating ?
+                                    <Loader type="ball-beat" style={{transform: 'scale(0.3)'}} color="white"/>
+                                    :
+                                    "Quick Update"
+                                }
+                            </Button>
+                        </ModalFooter>
+                    </Rodal>
                 </ReactCSSTransitionGroup>
             </Fragment>
         )

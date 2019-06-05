@@ -1,14 +1,160 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, Component} from 'react';
+import PropTypes from "prop-types";
+import {withRouter} from "react-router-dom";
+import {connect} from "react-redux";
+
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {
     Col, Row, Card, CardBody,
-    CardTitle, Button, Form, FormGroup, Label, Input, Container
+    CardTitle, Button, Form, FormGroup, Label, Input, Container, ListGroup, ListGroupItem
 } from 'reactstrap';
+import {AvField, AvForm, AvGroup, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
+import {Loader} from "react-loaders";
+import cx from 'classnames';
 
 import PageTitle from "../../Layout/AppMain/PageTitle";
+import {makeRequest} from "../../actions/requestAction";
+import request from "../../services/request";
+import {MESSAGES} from "../../constants/messages";
+import {DropdownList} from "react-widgets";
+import {Cropper} from "react-image-cropper";
 
-export default class NewUser extends React.Component {
+class NewUser extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            firstName: "",
+            lastName: "",
+            gender: "",
+            contactNumber: "",
+            verified: "",
+            isActive: "",
+            profilePictureFile: "",
+            profilePicture: "",
+            error: "",
+            role: "",
+            isLoading: false,
+            files: [],
+            editMode: "pick", // pick | crop | done
+        };
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSwitch = this.handleSwitch.bind(this);
+        this.handleClick = this.handleClick.bind(this);
+        this.handleImageLoaded = this.handleImageLoaded.bind(this);
+        this.handleImageChange = this.handleImageChange.bind(this);
+    }
+
+    resetFields() {
+        this.setState({
+            username: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+            firstName: "",
+            lastName: "",
+            gender: "",
+            contactNumber: "",
+            verified: "",
+            isActive: "",
+            profilePicture: "",
+            role: "",
+        })
+    }
+
+    handleChange(e) {
+        if (e.target && e.target.name) {
+            this.setState({
+                [e.target.name]: e.target.value
+            });
+        }
+    }
+
+    handleSubmit(event, errors, values) {
+        if (errors.length > 0) {
+            return;
+        }
+
+        const {
+            username, email, password, firstName, lastName, gender, contactNumber, verified,
+            isActive, profilePicture, role
+        } = this.state;
+
+        const data = {
+            username: username,
+            email: email,
+            password: password,
+            first_name: firstName,
+            last_name: lastName,
+            gender: gender,
+            contact_number: contactNumber,
+            verified: verified,
+            is_active: isActive,
+            profile_pic: profilePicture,
+            role: role,
+        };
+
+        this.setState({isLoading: true});
+        this.props.makeRequest(request.Auth.register, data, {message: MESSAGES.LOGGING}).then(
+            (responseData) => {
+                this.props.history.push("/users/all");
+            },
+            (errorData) => {
+                this.setState({error: errorData.message});
+                this.resetFields();
+                this.setState({isLoading: false});
+            }
+        );
+    }
+
+    handleSwitch(field) {
+        this.setState({
+            [field]: ! this.state[field]
+        });
+    }
+
+    handleImageLoaded() {
+        this.setState({
+            editMode: "crop"
+        })
+    }
+
+    handleClick(state) {
+        let node = this[state];
+        this.setState({
+            profilePicture: node.crop(),
+            editMode: "done"
+        })
+    }
+
+    handleImageChange(e) {
+        e.preventDefault();
+
+        let reader = new FileReader();
+        let file = e.target.files[0];
+
+        reader.onloadend = () => {
+            this.setState({
+                profilePictureFile: file,
+                profilePicture: reader.result,
+                editMode: "crop"
+            });
+        };
+
+        reader.readAsDataURL(file)
+    }
+
     render() {
+        const {
+            username, email, password, confirmPassword, firstName, lastName, gender, contactNumber, verified,
+            isActive, profilePicture, role, isLoading, editMode
+        } = this.state;
         return (
             <Fragment>
                 <ReactCSSTransitionGroup
@@ -29,60 +175,285 @@ export default class NewUser extends React.Component {
                         <Col md="12">
                             <Card className="main-card mb-3">
                                 <CardBody>
-                                    <CardTitle>Grid Rows</CardTitle>
-                                    <Form>
+                                    <CardTitle>New User Form</CardTitle>
+                                    <AvForm onSubmit={this.handleSubmit}>
                                         <Row form>
                                             <Col md={6}>
                                                 <FormGroup>
-                                                    <Label for="exampleEmail11">Email</Label>
-                                                    <Input type="email" name="email" id="exampleEmail11"
-                                                           placeholder="with a placeholder"/>
+                                                    <AvGroup>
+                                                        <AvField name="username"
+                                                                 label="Username"
+                                                                 type="text"
+                                                                 placeholder="Username..."
+                                                                 onChange={this.handleChange}
+                                                                 value={username}
+                                                                 validate={{
+                                                                     required: {
+                                                                         value: true,
+                                                                         errorMessage: 'Please enter a username'
+                                                                     }
+                                                                 }}
+                                                        />
+                                                    </AvGroup>
                                                 </FormGroup>
                                             </Col>
                                             <Col md={6}>
                                                 <FormGroup>
-                                                    <Label for="examplePassword11">Password</Label>
-                                                    <Input type="password" name="password" id="examplePassword11"
-                                                           placeholder="password placeholder"/>
+                                                    <AvGroup>
+                                                        <AvField name="email"
+                                                                 label="Email"
+                                                                 type="email"
+                                                                 placeholder="Email here..."
+                                                                 onChange={this.handleChange}
+                                                                 value={email}
+                                                                 validate={{
+                                                                     email: {
+                                                                         value: true,
+                                                                         errorMessage: 'Please enter a valid email address'
+                                                                     },
+                                                                     required: {
+                                                                         value: true,
+                                                                         errorMessage: 'Please enter an email address'
+                                                                     }
+                                                                 }}
+                                                        />
+                                                    </AvGroup>
                                                 </FormGroup>
                                             </Col>
-                                        </Row>
-                                        <FormGroup>
-                                            <Label for="exampleAddress">Address</Label>
-                                            <Input type="text" name="address" id="exampleAddress"
-                                                   placeholder="1234 Main St"/>
-                                        </FormGroup>
-                                        <FormGroup>
-                                            <Label for="exampleAddress2">Address 2</Label>
-                                            <Input type="text" name="address2" id="exampleAddress2"
-                                                   placeholder="Apartment, studio, or floor"/>
-                                        </FormGroup>
-                                        <Row form>
                                             <Col md={6}>
                                                 <FormGroup>
-                                                    <Label for="exampleCity">City</Label>
-                                                    <Input type="text" name="city" id="exampleCity"/>
+                                                    <AvGroup>
+                                                        <AvField name="password"
+                                                                 label="Password"
+                                                                 type="password"
+                                                                 placeholder="Enter your password..."
+                                                                 onChange={this.handleChange}
+                                                                 value={password}
+                                                                 validate={{
+                                                                     required: {
+                                                                         value: true,
+                                                                         errorMessage: 'Please enter your password'
+                                                                     },
+                                                                     minLength: {
+                                                                         value: 6,
+                                                                         errorMessage: 'Your name must be at least 6 characters'
+                                                                     },
+                                                                 }}
+                                                        />
+                                                    </AvGroup>
                                                 </FormGroup>
                                             </Col>
-                                            <Col md={4}>
+                                            <Col md={6}>
                                                 <FormGroup>
-                                                    <Label for="exampleState">State</Label>
-                                                    <Input type="text" name="state" id="exampleState"/>
+                                                    <AvGroup>
+                                                        <AvField name="confirmPassword"
+                                                                 label="Confirm Password"
+                                                                 type="password"
+                                                                 placeholder="Confirm your password..."
+                                                                 onChange={this.handleChange}
+                                                                 value={confirmPassword}
+                                                                 validate={{
+                                                                     required: {
+                                                                         value: true,
+                                                                         errorMessage: 'Please confirm your password'
+                                                                     },
+                                                                     match: {
+                                                                         value: 'password',
+                                                                         errorMessage: 'Password and Confirm Password must match'
+                                                                     },
+                                                                 }}
+                                                        />
+                                                    </AvGroup>
                                                 </FormGroup>
                                             </Col>
-                                            <Col md={2}>
+                                            <Col md={6}>
                                                 <FormGroup>
-                                                    <Label for="exampleZip">Zip</Label>
-                                                    <Input type="text" name="zip" id="exampleZip"/>
+                                                    <AvGroup>
+                                                        <AvField name="firstName"
+                                                                 label="First Name"
+                                                                 type="text"
+                                                                 placeholder="First Name ..."
+                                                                 onChange={this.handleChange}
+                                                                 value={firstName}
+                                                                 validate={{
+                                                                     required: {
+                                                                         value: true,
+                                                                         errorMessage: 'Please enter First Name'
+                                                                     },
+                                                                 }}
+                                                        />
+                                                    </AvGroup>
                                                 </FormGroup>
+                                            </Col>
+                                            <Col md={6}>
+                                                <FormGroup>
+                                                    <AvGroup>
+                                                        <AvField name="lastName"
+                                                                 label="Last Name"
+                                                                 type="text"
+                                                                 placeholder="Last Name ..."
+                                                                 onChange={this.handleChange}
+                                                                 value={lastName}
+                                                                 validate={{
+                                                                     required: {
+                                                                         value: true,
+                                                                         errorMessage: 'Please enter Last Name'
+                                                                     },
+                                                                 }}
+                                                        />
+                                                    </AvGroup>
+                                                </FormGroup>
+                                            </Col>
+                                            <Col md={6}>
+                                                <FormGroup>
+                                                    <AvGroup>
+                                                        <AvField name="contactNumber"
+                                                                 label="Contact Number"
+                                                                 type="text"
+                                                                 placeholder="Contact Number ..."
+                                                                 onChange={this.handleChange}
+                                                                 value={contactNumber}
+                                                                 validate={{
+                                                                     required: {
+                                                                         value: true,
+                                                                         errorMessage: 'Please enter your contact number'
+                                                                     },
+                                                                 }}
+                                                        />
+                                                    </AvGroup>
+                                                </FormGroup>
+                                            </Col>
+                                            <Col md={12}>
+                                                <FormGroup>
+                                                    <Label>Gender:</Label>
+                                                    <AvGroup>
+                                                        <AvRadioGroup inline name="gender"
+                                                              onChange={this.handleChange}
+                                                              value={gender}
+                                                              validate={{
+                                                                  required: {
+                                                                      value: true,
+                                                                      errorMessage: 'Please select your gender'
+                                                                  },
+                                                              }}
+                                                        >
+                                                            <AvRadio label="Male" value="male" />
+                                                            <AvRadio label="Female" value="female" />
+                                                        </AvRadioGroup>
+                                                    </AvGroup>
+                                                </FormGroup>
+                                            </Col>
+                                            <Col md={12}>
+                                                <Label>Is Active:</Label>
+                                                <FormGroup>
+                                                    <div className="switch has-switch mb-2 mr-2" data-on-label="Active"
+                                                         data-off-label="Inactive"
+                                                         onClick={() => this.handleSwitch('isActive')}>
+                                                        <div className={cx("switch-animate", {
+                                                            'switch-on': isActive,
+                                                            'switch-off': !isActive
+                                                        })}>
+                                                            <input type="checkbox"/><span
+                                                            className="switch-left bg-success">&nbsp;</span><label>&nbsp;</label><span
+                                                            className="switch-right bg-success">&nbsp;</span>
+                                                        </div>
+                                                    </div>
+                                                </FormGroup>
+                                            </Col>
+                                            <Col md={12}>
+                                                <Label>Is Verified:</Label>
+                                                <FormGroup>
+                                                    <div className="switch has-switch mb-2 mr-2" data-on-label="Verified"
+                                                         data-off-label="Unverified"
+                                                         onClick={() => this.handleSwitch('verified')}>
+                                                        <div className={cx("switch-animate", {
+                                                            'switch-on': verified,
+                                                            'switch-off': !verified
+                                                        })}>
+                                                            <input type="checkbox"/><span
+                                                            className="switch-left bg-success">&nbsp;</span><label>&nbsp;</label><span
+                                                            className="switch-right bg-success">&nbsp;</span>
+                                                        </div>
+                                                    </div>
+                                                </FormGroup>
+                                            </Col>
+                                            <Col md={12}>
+                                                <Label>Role:</Label>
+                                                <Row>
+                                                    <Col md={4}>
+                                                        <FormGroup>
+                                                            <AvField type="select" name="select" label="Option" helpMessage="Idk, this is an example. Deal with it!">
+                                                                <option>1</option>
+                                                                <option>2</option>
+                                                                <option>3</option>
+                                                                <option>4</option>
+                                                                <option>5</option>
+                                                            </AvField>
+                                                        </FormGroup>
+                                                    </Col>
+                                                </Row>
+                                            </Col>
+                                            <Col md={12}>
+                                                <Row>
+                                                    <Col md={3}>
+                                                        <FormGroup>
+                                                            <AvGroup>
+                                                                <AvField name="profilePicture"
+                                                                         label="Profile Picture"
+                                                                         type="file"
+                                                                         placeholder="Profile Picture"
+                                                                         onChange={(e) => this.handleImageChange(e)}
+                                                                />
+                                                                {
+                                                                    editMode === "crop" &&
+                                                                    <div>
+                                                                        <Cropper src={profilePicture}
+                                                                                 ref={ref => {
+                                                                                     this.image = ref
+                                                                                 }}
+                                                                                 onImgLoad={() => this.handleImageLoaded()}
+                                                                        />
+
+                                                                        <div className="divider"/>
+
+                                                                        <div className="text-center">
+                                                                            <Button color="primary"
+                                                                                    onClick={() => this.handleClick('image')}
+                                                                            >
+                                                                                Crop
+                                                                            </Button>
+                                                                        </div>
+                                                                </div>
+                                                                }
+
+                                                                {
+                                                                    editMode === "done" &&
+                                                                    <Col md={6}>
+                                                                        <img
+                                                                            className="after-img rounded"
+                                                                            src={profilePicture}
+                                                                            alt=""
+                                                                        />
+                                                                    </Col>
+                                                                }
+                                                            </AvGroup>
+                                                        </FormGroup>
+                                                    </Col>
+                                                </Row>
                                             </Col>
                                         </Row>
-                                        <FormGroup check>
-                                            <Input type="checkbox" name="check" id="exampleCheck"/>
-                                            <Label for="exampleCheck" check>Check me out</Label>
-                                        </FormGroup>
-                                        <Button color="primary" className="mt-2">Sign in</Button>
-                                    </Form>
+                                        <Row className="divider"/>
+                                        <div className="d-flex align-items-center">
+                                            <Button color="primary" size="lg">
+                                                {isLoading ?
+                                                    <Loader type="ball-beat" style={{transform: 'scale(0.3)'}}
+                                                            color="white"/>
+                                                    :
+                                                    "Add New User"
+                                                }
+                                            </Button>
+                                        </div>
+                                    </AvForm>
 
                                 </CardBody>
                             </Card>
@@ -96,3 +467,20 @@ export default class NewUser extends React.Component {
         );
     }
 }
+
+NewUser.propTypes = {
+    makeRequest: PropTypes.func.isRequired,
+};
+
+
+function mapStateToProps(state) {
+    return {
+        auth: state.authReducer,
+        appStatus: state.appStatusReducer
+    }
+}
+
+
+export default withRouter(connect(mapStateToProps, {
+    makeRequest,
+})(NewUser));

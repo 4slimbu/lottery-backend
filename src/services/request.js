@@ -61,6 +61,10 @@ const Auth = {
 const Users = {
     get: (query) =>
         requests('GET', API_BASE_URL + "/users?" + query),
+    delete: (data) =>
+        requests('DELETE', API_BASE_URL + "/users", data),
+    update: (data) =>
+        requests('PUT', API_BASE_URL + "/users", data),
 };
 
 /**
