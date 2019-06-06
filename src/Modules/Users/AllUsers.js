@@ -314,7 +314,7 @@ class AllUsers extends React.Component {
                                                         accessor: 'roles',
                                                         Cell: row => (
                                                             <div className="d-block w-100 text-center">
-                                                                {row.value && row.value[0].label}
+                                                                {row.value.length > 0 && row.value[0].label}
                                                             </div>
                                                         ),
                                                     },

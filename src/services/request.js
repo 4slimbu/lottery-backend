@@ -38,7 +38,7 @@ const Auth = {
     logout: () =>
         requests('PUT', API_BASE_URL + "/logout"),
     register: (data) =>
-        requests('POST', apiBaseUrl("/user/register"), data),
+        requests('POST', API_BASE_URL + "/register", data),
     save: (data) =>
         requests('PUT', apiBaseUrl("/user"), data),
     forgotPassword: (data) =>
@@ -61,11 +61,26 @@ const Auth = {
 const Users = {
     get: (query) =>
         requests('GET', API_BASE_URL + "/users?" + query),
-    delete: (data) =>
-        requests('DELETE', API_BASE_URL + "/users", data),
+    create: (data) =>
+        requests('POST', API_BASE_URL + "/users", data),
     update: (data) =>
         requests('PUT', API_BASE_URL + "/users", data),
+    delete: (data) =>
+        requests('DELETE', API_BASE_URL + "/users", data),
 };
+
+/**
+ * Handles all Business related requests
+ */
+const Roles = {
+    get: (query) =>
+        requests('GET', API_BASE_URL + "/roles?" + query),
+    delete: (data) =>
+        requests('DELETE', API_BASE_URL + "/roles", data),
+    update: (data) =>
+        requests('PUT', API_BASE_URL + "/roles", data),
+};
+
 
 /**
  * Handles all Business related requests
@@ -137,6 +152,7 @@ const AppSettings = {
 export default {
     Auth,
     Users,
+    Roles,
     Business,
     BusinessCategory,
     Level,

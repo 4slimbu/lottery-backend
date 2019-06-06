@@ -6,17 +6,17 @@ import {connect} from "react-redux";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {
     Col, Row, Card, CardBody,
-    CardTitle, Button, Form, FormGroup, Label, Input, Container, ListGroup, ListGroupItem
+    CardTitle, Button, FormGroup, Label, Container
 } from 'reactstrap';
 import {AvField, AvForm, AvGroup, AvRadio, AvRadioGroup} from "availity-reactstrap-validation";
 import {Loader} from "react-loaders";
 import cx from 'classnames';
+import * as _ from "lodash";
 
 import PageTitle from "../../Layout/AppMain/PageTitle";
 import {makeRequest} from "../../actions/requestAction";
 import request from "../../services/request";
 import {MESSAGES} from "../../constants/messages";
-import {DropdownList} from "react-widgets";
 import {Cropper} from "react-image-cropper";
 
 class NewUser extends Component {
@@ -37,7 +37,8 @@ class NewUser extends Component {
             profilePictureFile: "",
             profilePicture: "",
             error: "",
-            role: "",
+            selectedRoleId: "",
+            roles: "",
             isLoading: false,
             files: [],
             editMode: "pick", // pick | crop | done
@@ -49,6 +50,30 @@ class NewUser extends Component {
         this.handleClick = this.handleClick.bind(this);
         this.handleImageLoaded = this.handleImageLoaded.bind(this);
         this.handleImageChange = this.handleImageChange.bind(this);
+    }
+
+    async componentDidMount() {
+        this._isMounted = true;
+
+        this.setState({isLoading: true});
+        this._isMounted && await this.props.makeRequest(request.Roles.get, {message: MESSAGES.LOGGING}).then(
+            (responseData) => {
+                if (responseData.data) {
+                    this.setState({
+                        roles: responseData.data,
+                    });
+                }
+                this.setState({isLoading: false});
+            },
+            (errorData) => {
+                this.setState({isLoading: false});
+            }
+        );
+
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     resetFields() {
@@ -83,7 +108,7 @@ class NewUser extends Component {
 
         const {
             username, email, password, firstName, lastName, gender, contactNumber, verified,
-            isActive, profilePicture, role
+            isActive, profilePicture, selectedRoleId
         } = this.state;
 
         const data = {
@@ -96,18 +121,17 @@ class NewUser extends Component {
             contact_number: contactNumber,
             verified: verified,
             is_active: isActive,
-            profile_pic: profilePicture,
-            role: role,
+            profile_picture: profilePicture,
+            role: selectedRoleId,
         };
 
         this.setState({isLoading: true});
-        this.props.makeRequest(request.Auth.register, data, {message: MESSAGES.LOGGING}).then(
+        this.props.makeRequest(request.Users.create, data, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 this.props.history.push("/users/all");
             },
             (errorData) => {
                 this.setState({error: errorData.message});
-                this.resetFields();
                 this.setState({isLoading: false});
             }
         );
@@ -115,7 +139,7 @@ class NewUser extends Component {
 
     handleSwitch(field) {
         this.setState({
-            [field]: ! this.state[field]
+            [field]: !this.state[field]
         });
     }
 
@@ -153,7 +177,7 @@ class NewUser extends Component {
     render() {
         const {
             username, email, password, confirmPassword, firstName, lastName, gender, contactNumber, verified,
-            isActive, profilePicture, role, isLoading, editMode
+            isActive, profilePicture, selectedRoleId, isLoading, editMode, roles
         } = this.state;
         return (
             <Fragment>
@@ -328,17 +352,17 @@ class NewUser extends Component {
                                                     <Label>Gender:</Label>
                                                     <AvGroup>
                                                         <AvRadioGroup inline name="gender"
-                                                              onChange={this.handleChange}
-                                                              value={gender}
-                                                              validate={{
-                                                                  required: {
-                                                                      value: true,
-                                                                      errorMessage: 'Please select your gender'
-                                                                  },
-                                                              }}
+                                                                      onChange={this.handleChange}
+                                                                      value={gender}
+                                                                      validate={{
+                                                                          required: {
+                                                                              value: true,
+                                                                              errorMessage: 'Please select your gender'
+                                                                          },
+                                                                      }}
                                                         >
-                                                            <AvRadio label="Male" value="male" />
-                                                            <AvRadio label="Female" value="female" />
+                                                            <AvRadio label="Male" value="male"/>
+                                                            <AvRadio label="Female" value="female"/>
                                                         </AvRadioGroup>
                                                     </AvGroup>
                                                 </FormGroup>
@@ -363,7 +387,8 @@ class NewUser extends Component {
                                             <Col md={12}>
                                                 <Label>Is Verified:</Label>
                                                 <FormGroup>
-                                                    <div className="switch has-switch mb-2 mr-2" data-on-label="Verified"
+                                                    <div className="switch has-switch mb-2 mr-2"
+                                                         data-on-label="Verified"
                                                          data-off-label="Unverified"
                                                          onClick={() => this.handleSwitch('verified')}>
                                                         <div className={cx("switch-animate", {
@@ -378,16 +403,25 @@ class NewUser extends Component {
                                                 </FormGroup>
                                             </Col>
                                             <Col md={12}>
-                                                <Label>Role:</Label>
                                                 <Row>
                                                     <Col md={4}>
                                                         <FormGroup>
-                                                            <AvField type="select" name="select" label="Option" helpMessage="Idk, this is an example. Deal with it!">
-                                                                <option>1</option>
-                                                                <option>2</option>
-                                                                <option>3</option>
-                                                                <option>4</option>
-                                                                <option>5</option>
+                                                            <AvField type="select" name="role" label="Role"
+                                                                selected={selectedRoleId}
+                                                                onChange={(e) => this.setState({selectedRoleId: e.target.value})}
+                                                                validate={{
+                                                                    required: {
+                                                                        value: true,
+                                                                        errorMessage: 'Please select role'
+                                                                    },
+                                                                }}
+                                                            >
+                                                                <option value="">--Select Role--</option>
+                                                                {
+                                                                    _.map(roles, function (role, index) {
+                                                                        return <option key={index} value={role.id}>{role.label}</option>
+                                                                    })
+                                                                }
                                                             </AvField>
                                                         </FormGroup>
                                                     </Col>
@@ -423,7 +457,7 @@ class NewUser extends Component {
                                                                                 Crop
                                                                             </Button>
                                                                         </div>
-                                                                </div>
+                                                                    </div>
                                                                 }
 
                                                                 {
