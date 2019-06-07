@@ -74,6 +74,22 @@ const Users = {
 };
 
 /**
+ * Handles all Permissions related requests
+ */
+const Permissions = {
+    all: (query) =>
+        requests('GET', API_BASE_URL + "/permissions?" + query),
+    get: (id) =>
+        requests('GET',API_BASE_URL + `/permissions/${id}`),
+    create: (data) =>
+        requests('POST', API_BASE_URL + "/permissions", data),
+    update: (data) =>
+        requests('PUT', API_BASE_URL + "/permissions/" + data.id, data),
+    deleteMultiple: (data) =>
+        requests('DELETE', API_BASE_URL + "/permissions", data),
+};
+
+/**
  * Handles all Business related requests
  */
 const Roles = {
@@ -156,6 +172,7 @@ const AppSettings = {
 export default {
     Auth,
     Users,
+    Permissions,
     Roles,
     Business,
     BusinessCategory,

@@ -7,7 +7,7 @@ import Profile from "./Profile";
 import Roles from "./Roles";
 import AddNewRole from "./AddNewRole";
 import AddNewPermission from "./AddNewPermission";
-import Permissions from "./Permissions";
+import AllPermissions from "./AllPermissions";
 
 // Layout
 
@@ -37,7 +37,7 @@ const Users = ({match}) => (
                     <Route path={`${match.url}/roles/new`} component={AddNewRole}/>
                     <Route path={`${match.url}/roles`} component={Roles}/>
                     <Route path={`${match.url}/permissions/new`} component={AddNewPermission}/>
-                    <Route path={`${match.url}/permissions`} component={Permissions}/>
+                    <Route path={`${match.url}/permissions`} component={AllPermissions}/>
                 </div>
                 <AppFooter/>
             </div>

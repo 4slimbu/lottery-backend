@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React, {Component, Fragment} from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import PropTypes from "prop-types";
 import {withRouter} from "react-router-dom";
@@ -28,7 +28,7 @@ import {MESSAGES} from "../../constants/messages";
 import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
 
 
-class AllUsers extends React.Component {
+class AllPermissions extends Component {
     constructor() {
         super();
         this.state = {
@@ -43,7 +43,9 @@ class AllUsers extends React.Component {
             showDeleteCompletionBox: false,
             reactTableState: {},
             quickEdit: {
-                status: 0
+                id: '',
+                name: '',
+                label: ''
             }
         };
 
@@ -86,6 +88,7 @@ class AllUsers extends React.Component {
     handleChange(e) {
         this.setState({
             quickEdit: {
+                ...this.state.quickEdit,
                 [e.target.name]: e.target.value
             }
         });
@@ -100,10 +103,6 @@ class AllUsers extends React.Component {
                 </DropdownToggle>
                 <DropdownMenu
                     className="rm-pointers dropdown-menu-hover-link">
-                    <DropdownItem onClick={() => this.showQuickEditBox()}>
-                        <i className="dropdown-icon lnr-inbox"> </i>
-                        <span>Quick Edit</span>
-                    </DropdownItem>
                     <DropdownItem onClick={() => this.showDeleteConfirmationBox()}>
                         <i className="dropdown-icon lnr-file-empty"> </i>
                         <span>Delete</span>
@@ -152,7 +151,7 @@ class AllUsers extends React.Component {
         // Start loading indicator and call api
         this.setState({isLoading: true});
 
-        await this.props.makeRequest(request.Users.all, query, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Permissions.all, query, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 if (responseData.data) {
                     this.setState({
@@ -183,9 +182,16 @@ class AllUsers extends React.Component {
         this.setState({showDeleteConfirmationBox: true });
     }
 
-    showQuickEditBox(id = null) {
-        if (id) {
-            this.setState({selectedIds: [id]});
+    showQuickEditBox(permission = null) {
+        if (permission) {
+            this.setState({
+                selectedIds: [permission.id],
+                quickEdit: {
+                    id: permission.id,
+                    name: permission.name,
+                    label: permission.label
+                }
+            });
         }
         this.setState({showQuickEditBox: true});
     }
@@ -196,13 +202,14 @@ class AllUsers extends React.Component {
 
     async handleQuickEdit() {
         const data = {
-            user_ids: this.state.selectedIds,
-            is_active: this.state.quickEdit.status
+            id: this.state.quickEdit.id,
+            name: this.state.quickEdit.name,
+            label: this.state.quickEdit.label,
         };
 
         this.setState({isUpdating: true});
 
-        await this.props.makeRequest(request.Users.updateMultiple, data, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Permissions.update, data, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 this.setState({isUpdating: false});
                 this.fetchData(this.state.reactTableState);
@@ -211,7 +218,6 @@ class AllUsers extends React.Component {
                 this.setState({isUpdating: false});
             }
         );
-
     }
 
     async handleDelete() {
@@ -219,10 +225,10 @@ class AllUsers extends React.Component {
         this.setState({showDeleteConfirmationBox: false });
 
         const data = {
-            user_ids: this.state.selectedIds
+            permission_ids: this.state.selectedIds
         };
 
-        await this.props.makeRequest(request.Users.deleteMultiple, data, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Permissions.deleteMultiple, data, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 this.setState({isLoading: false});
                 this.fetchData(this.state.reactTableState);
@@ -247,7 +253,7 @@ class AllUsers extends React.Component {
                     transitionLeave={false}>
                     <div>
                         <PageTitle
-                            heading="All Users"
+                            heading="All Permissions"
                             subheading="Choose between regular React Bootstrap tables or advanced dynamic ones."
                             icon="pe-7s-medal icon-gradient bg-tempting-azure"
                         />
@@ -282,50 +288,11 @@ class AllUsers extends React.Component {
                                                 columns: [
                                                     {
                                                         Header: 'Name',
-                                                        accessor: 'full_name',
-                                                        Cell: props => (
-                                                            <div>
-                                                                <div className="widget-content p-0">
-                                                                    <div className="widget-content-wrapper">
-                                                                        <div className="widget-content-left mr-3">
-                                                                            <div className="widget-content-left">
-                                                                                <img width={52}
-                                                                                     className="rounded-circle"
-                                                                                     src={props.original.profile_pic}
-                                                                                     alt=""/>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div className="widget-content-left flex2">
-                                                                            <div className="widget-heading">
-                                                                                {props.value}
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )
+                                                        accessor: 'name'
                                                     },
                                                     {
-                                                        Header: 'Email',
-                                                        accessor: 'email'
-                                                    },
-                                                    {
-                                                        Header: 'Role',
-                                                        accessor: 'roles',
-                                                        Cell: row => (
-                                                            <div className="d-block w-100 text-center">
-                                                                {row.value.length > 0 && row.value[0].label}
-                                                            </div>
-                                                        ),
-                                                    },
-                                                    {
-                                                        Header: 'Status',
-                                                        accessor: 'is_active',
-                                                        Cell: row => (
-                                                            <div className="d-block w-100 text-center">
-                                                                {row.value ? 'Active' : 'Inactive'}
-                                                            </div>
-                                                        ),
+                                                        Header: 'Label',
+                                                        accessor: 'label'
                                                     },
                                                 ]
                                             },
@@ -344,11 +311,7 @@ class AllUsers extends React.Component {
                                                                     </DropdownToggle>
                                                                     <DropdownMenu
                                                                         className="rm-pointers dropdown-menu-hover-link">
-                                                                        <DropdownItem onClick={() => this.showQuickEditBox(props.original.id)}>
-                                                                            <i className="dropdown-icon lnr-inbox"> </i>
-                                                                            <span>Quick Edit</span>
-                                                                        </DropdownItem>
-                                                                        <DropdownItem onClick={() => this.props.history.push("/users/edit/" + props.original.id)}>
+                                                                        <DropdownItem onClick={() => this.showQuickEditBox(props.original)}>
                                                                             <i className="dropdown-icon lnr-inbox"> </i>
                                                                             <span>Edit</span>
                                                                         </DropdownItem>
@@ -409,20 +372,21 @@ class AllUsers extends React.Component {
                            animation={"fade"}
                            showMask={true}
                     >
-                        <ModalHeader>Quick Edit</ModalHeader>
+                        <ModalHeader>Edit</ModalHeader>
                         <ModalBody>
                             <AvForm onSubmit={this.handleLogin}>
                                 <Row form>
                                     <Col md={12}>
                                         <FormGroup>
                                             <AvGroup>
-                                                <AvField type="select" name="status" label="Status"
+                                                <AvField type="text" name="name" label="Name"
                                                          onChange={this.handleChange}
-                                                         value={quickEdit.status}
-                                                >
-                                                    <option value={0}>In Active</option>
-                                                    <option value={1}>Active</option>
-                                                </AvField>
+                                                         value={quickEdit.name}
+                                                />
+                                                <AvField type="text" name="label" label="Label"
+                                                         onChange={this.handleChange}
+                                                         value={quickEdit.label}
+                                                />
                                             </AvGroup>
                                         </FormGroup>
                                     </Col>
@@ -446,7 +410,7 @@ class AllUsers extends React.Component {
     }
 }
 
-AllUsers.propTypes = {
+AllPermissions.propTypes = {
     makeRequest: PropTypes.func.isRequired,
 };
 
@@ -461,4 +425,4 @@ function mapStateToProps(state) {
 
 export default withRouter(connect(mapStateToProps, {
     makeRequest,
-})(AllUsers));
+})(AllPermissions));
