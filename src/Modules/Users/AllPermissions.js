@@ -346,7 +346,7 @@ class AllPermissions extends Component {
                         confirmButtonColor=""
                         show={this.state.showDeleteConfirmationBox}
                         text="You will not be able to recover these data!"
-                        type="success"
+                        type="error"
                         showCancelButton
                         onConfirm={this.handleDelete}
                         onCancel={() => this.setState({showDeleteConfirmationBox: false})}/>
@@ -355,14 +355,6 @@ class AllPermissions extends Component {
                         title="Deleted"
                         confirmButtonColor=""
                         show={this.state.showDeleteCompletionBox}
-                        text="Your imaginary file has been deleted."
-                        type="success"
-                        onConfirm={() => this.setState({showDeleteConfirmationBox: false, showDeleteCompletionBox: false})}/>
-
-                    <SweetAlert
-                        title="Deleted"
-                        confirmButtonColor=""
-                        show={this.state.showEmptySelect}
                         text="Your imaginary file has been deleted."
                         type="error"
                         onConfirm={() => this.setState({showDeleteConfirmationBox: false, showDeleteCompletionBox: false})}/>

@@ -6,8 +6,8 @@ import NewUser from "./NewUser";
 import Profile from "./Profile";
 import Roles from "./Roles";
 import AddNewRole from "./AddNewRole";
-import AddNewPermission from "./AddNewPermission";
 import AllPermissions from "./AllPermissions";
+import NewPermission from "./NewPermission";
 
 // Layout
 
@@ -19,8 +19,6 @@ import AppFooter from '../../Layout/AppFooter/';
 
 import ThemeOptions from '../../Layout/ThemeOptions/';
 import EditUser from "./EditUser";
-
-
 
 const Users = ({match}) => (
     <Fragment>
@@ -36,8 +34,8 @@ const Users = ({match}) => (
                     <Route path={`${match.url}/profile`} component={Profile}/>
                     <Route path={`${match.url}/roles/new`} component={AddNewRole}/>
                     <Route path={`${match.url}/roles`} component={Roles}/>
-                    <Route path={`${match.url}/permissions/new`} component={AddNewPermission}/>
-                    <Route path={`${match.url}/permissions`} component={AllPermissions}/>
+                    <Route exact path={`${match.url}/permissions/new`} component={NewPermission}/>
+                    <Route exact path={`${match.url}/permissions`} component={AllPermissions}/>
                 </div>
                 <AppFooter/>
             </div>
