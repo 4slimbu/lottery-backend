@@ -152,7 +152,7 @@ class AllUsers extends React.Component {
         // Start loading indicator and call api
         this.setState({isLoading: true});
 
-        await this.props.makeRequest(request.Users.get, query, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Users.all, query, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 if (responseData.data) {
                     this.setState({
@@ -202,7 +202,7 @@ class AllUsers extends React.Component {
 
         this.setState({isUpdating: true});
 
-        await this.props.makeRequest(request.Users.update, data, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Users.updateMultiple, data, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 this.setState({isUpdating: false});
                 this.fetchData(this.state.reactTableState);
@@ -222,7 +222,7 @@ class AllUsers extends React.Component {
             user_ids: this.state.selectedIds
         };
 
-        await this.props.makeRequest(request.Users.delete, data, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Users.deleteMultiple, data, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 this.setState({isLoading: false});
                 this.fetchData(this.state.reactTableState);
@@ -348,7 +348,7 @@ class AllUsers extends React.Component {
                                                                             <i className="dropdown-icon lnr-inbox"> </i>
                                                                             <span>Quick Edit</span>
                                                                         </DropdownItem>
-                                                                        <DropdownItem onClick={() => this.showQuickEditBox(props.original.id)}>
+                                                                        <DropdownItem onClick={() => this.props.history.push("/users/edit/" + props.original.id)}>
                                                                             <i className="dropdown-icon lnr-inbox"> </i>
                                                                             <span>Edit</span>
                                                                         </DropdownItem>

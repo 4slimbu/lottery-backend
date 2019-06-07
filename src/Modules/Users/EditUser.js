@@ -19,7 +19,7 @@ import request from "../../services/request";
 import {MESSAGES} from "../../constants/messages";
 import {Cropper} from "react-image-cropper";
 
-class NewUser extends Component {
+class EditUser extends Component {
     constructor(props) {
         super(props);
 
@@ -37,7 +37,7 @@ class NewUser extends Component {
             profilePictureFile: "",
             profilePicture: "",
             error: "",
-            selectedRoleId: "",
+            role: "",
             roles: "",
             isLoading: false,
             files: [],
@@ -54,6 +54,11 @@ class NewUser extends Component {
 
     async componentDidMount() {
         this._isMounted = true;
+        const {id} = this.props.match.params;
+
+        if (! id) {
+            this.props.history.push("/users/all");
+        }
 
         this.setState({isLoading: true});
         this._isMounted && await this.props.makeRequest(request.Roles.all, '', {message: MESSAGES.LOGGING}).then(
@@ -61,6 +66,30 @@ class NewUser extends Component {
                 if (responseData.data) {
                     this.setState({
                         roles: responseData.data,
+                    });
+                }
+                this.setState({isLoading: false});
+            },
+            (errorData) => {
+                this.setState({isLoading: false});
+            }
+        );
+
+        this._isMounted && await this.props.makeRequest(request.Users.get, id, {message: MESSAGES.LOGGING}).then(
+            (res) => {
+                if (res.data) {
+                    this.setState({
+                        username: res.data.username,
+                        email: res.data.email,
+                        firstName: res.data.first_name,
+                        lastName: res.data.last_name,
+                        gender: res.data.gender,
+                        contactNumber: res.data.contact_number,
+                        verified: res.data.verified,
+                        isActive: res.data.is_active,
+                        profilePicture: res.data.profile_pic,
+                        role: res.data.roles.length > 0 ? res.data.roles[0].id : '',
+                        editMode: "done"
                     });
                 }
                 this.setState({isLoading: false});
@@ -102,6 +131,7 @@ class NewUser extends Component {
     }
 
     handleSubmit(event, errors, values) {
+        event.preventDefault();
         if (errors.length > 0) {
             return;
         }
@@ -111,22 +141,25 @@ class NewUser extends Component {
             isActive, profilePicture, role
         } = this.state;
 
+        const {id} = this.props.match.params;
+
         const data = {
-            username: username,
-            email: email,
-            password: password,
-            first_name: firstName,
-            last_name: lastName,
-            gender: gender,
-            contact_number: contactNumber,
-            verified: verified,
-            is_active: isActive,
-            profile_picture: profilePicture,
-            role: role,
+            id: id,
+            username: username ? username : undefined,
+            email: email ? email : undefined,
+            password: password ? password : undefined,
+            first_name: firstName ? firstName : undefined,
+            last_name: lastName ? lastName : undefined,
+            gender: gender ? gender: undefined,
+            contact_number: contactNumber ? contactNumber : undefined,
+            verified: verified ? verified : undefined,
+            is_active: isActive ? isActive : undefined,
+            profile_picture: profilePicture ? profilePicture : undefined,
+            role: role ? role: undefined,
         };
 
         this.setState({isLoading: true});
-        this.props.makeRequest(request.Users.create, data, {message: MESSAGES.LOGGING}).then(
+        this.props.makeRequest(request.Users.update, data, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 this.props.history.push("/users/all");
             },
@@ -190,7 +223,7 @@ class NewUser extends Component {
                     transitionLeave={false}>
                     <div>
                         <PageTitle
-                            heading="Add New Users"
+                            heading="Edit User"
                             subheading="Choose between regular React Bootstrap tables or advanced dynamic ones."
                             icon="pe-7s-medal icon-gradient bg-tempting-azure"
                         />
@@ -199,7 +232,8 @@ class NewUser extends Component {
                         <Col md="12">
                             <Card className="main-card mb-3">
                                 <CardBody>
-                                    <CardTitle>New User Form</CardTitle>
+                                    <CardTitle>Edit User Form </CardTitle>
+
                                     <AvForm onSubmit={this.handleSubmit} model={this.state}>
                                         <Row form>
                                             <Col md={6}>
@@ -211,12 +245,6 @@ class NewUser extends Component {
                                                                  placeholder="Username..."
                                                                  onChange={this.handleChange}
                                                                  value={username}
-                                                                 validate={{
-                                                                     required: {
-                                                                         value: true,
-                                                                         errorMessage: 'Please enter a username'
-                                                                     }
-                                                                 }}
                                                         />
                                                     </AvGroup>
                                                 </FormGroup>
@@ -253,11 +281,8 @@ class NewUser extends Component {
                                                                  placeholder="Enter your password..."
                                                                  onChange={this.handleChange}
                                                                  value={password}
+                                                                 autoComplete={false}
                                                                  validate={{
-                                                                     required: {
-                                                                         value: true,
-                                                                         errorMessage: 'Please enter your password'
-                                                                     },
                                                                      minLength: {
                                                                          value: 6,
                                                                          errorMessage: 'Your name must be at least 6 characters'
@@ -277,10 +302,6 @@ class NewUser extends Component {
                                                                  onChange={this.handleChange}
                                                                  value={confirmPassword}
                                                                  validate={{
-                                                                     required: {
-                                                                         value: true,
-                                                                         errorMessage: 'Please confirm your password'
-                                                                     },
                                                                      match: {
                                                                          value: 'password',
                                                                          errorMessage: 'Password and Confirm Password must match'
@@ -299,12 +320,6 @@ class NewUser extends Component {
                                                                  placeholder="First Name ..."
                                                                  onChange={this.handleChange}
                                                                  value={firstName}
-                                                                 validate={{
-                                                                     required: {
-                                                                         value: true,
-                                                                         errorMessage: 'Please enter First Name'
-                                                                     },
-                                                                 }}
                                                         />
                                                     </AvGroup>
                                                 </FormGroup>
@@ -318,12 +333,6 @@ class NewUser extends Component {
                                                                  placeholder="Last Name ..."
                                                                  onChange={this.handleChange}
                                                                  value={lastName}
-                                                                 validate={{
-                                                                     required: {
-                                                                         value: true,
-                                                                         errorMessage: 'Please enter Last Name'
-                                                                     },
-                                                                 }}
                                                         />
                                                     </AvGroup>
                                                 </FormGroup>
@@ -337,12 +346,6 @@ class NewUser extends Component {
                                                                  placeholder="Contact Number ..."
                                                                  onChange={this.handleChange}
                                                                  value={contactNumber}
-                                                                 validate={{
-                                                                     required: {
-                                                                         value: true,
-                                                                         errorMessage: 'Please enter your contact number'
-                                                                     },
-                                                                 }}
                                                         />
                                                     </AvGroup>
                                                 </FormGroup>
@@ -354,12 +357,6 @@ class NewUser extends Component {
                                                         <AvRadioGroup inline name="gender"
                                                                       onChange={this.handleChange}
                                                                       value={gender}
-                                                                      validate={{
-                                                                          required: {
-                                                                              value: true,
-                                                                              errorMessage: 'Please select your gender'
-                                                                          },
-                                                                      }}
                                                         >
                                                             <AvRadio label="Male" value="male"/>
                                                             <AvRadio label="Female" value="female"/>
@@ -407,14 +404,8 @@ class NewUser extends Component {
                                                     <Col md={4}>
                                                         <FormGroup>
                                                             <AvField type="select" name="role" label="Role"
-                                                                selected={role}
-                                                                onChange={(e) => this.setState({role: e.target.value})}
-                                                                validate={{
-                                                                    required: {
-                                                                        value: true,
-                                                                        errorMessage: 'Please select role'
-                                                                    },
-                                                                }}
+                                                                     selected={role}
+                                                                     onChange={(e) => this.setState({role: e.target.value})}
                                                             >
                                                                 <option value="">--Select Role--</option>
                                                                 {
@@ -483,12 +474,11 @@ class NewUser extends Component {
                                                     <Loader type="ball-beat" style={{transform: 'scale(0.3)'}}
                                                             color="white"/>
                                                     :
-                                                    "Add New User"
+                                                    "Update User"
                                                 }
                                             </Button>
                                         </div>
                                     </AvForm>
-
                                 </CardBody>
                             </Card>
                         </Col>
@@ -502,7 +492,7 @@ class NewUser extends Component {
     }
 }
 
-NewUser.propTypes = {
+EditUser.propTypes = {
     makeRequest: PropTypes.func.isRequired,
 };
 
@@ -517,4 +507,4 @@ function mapStateToProps(state) {
 
 export default withRouter(connect(mapStateToProps, {
     makeRequest,
-})(NewUser));
+})(EditUser));

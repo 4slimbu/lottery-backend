@@ -18,6 +18,7 @@ import AppFooter from '../../Layout/AppFooter/';
 // Theme Options
 
 import ThemeOptions from '../../Layout/ThemeOptions/';
+import EditUser from "./EditUser";
 
 
 
@@ -31,6 +32,7 @@ const Users = ({match}) => (
                 <div className="app-main__inner">
                     <Route path={`${match.url}/all`} component={AllUsers}/>
                     <Route path={`${match.url}/new`} component={NewUser}/>
+                    <Route path={`${match.url}/edit/:id`} component={EditUser}/>
                     <Route path={`${match.url}/profile`} component={Profile}/>
                     <Route path={`${match.url}/roles/new`} component={AddNewRole}/>
                     <Route path={`${match.url}/roles`} component={Roles}/>

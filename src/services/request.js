@@ -59,13 +59,17 @@ const Auth = {
  * Handles all Business related requests
  */
 const Users = {
-    get: (query) =>
+    all: (query) =>
         requests('GET', API_BASE_URL + "/users?" + query),
+    get: (id) =>
+        requests('GET',API_BASE_URL + `/users/${id}`),
     create: (data) =>
         requests('POST', API_BASE_URL + "/users", data),
     update: (data) =>
+        requests('PUT', API_BASE_URL + "/users/" + data.id, data),
+    updateMultiple: (data) =>
         requests('PUT', API_BASE_URL + "/users", data),
-    delete: (data) =>
+    deleteMultiple: (data) =>
         requests('DELETE', API_BASE_URL + "/users", data),
 };
 
@@ -73,7 +77,7 @@ const Users = {
  * Handles all Business related requests
  */
 const Roles = {
-    get: (query) =>
+    all: (query) =>
         requests('GET', API_BASE_URL + "/roles?" + query),
     delete: (data) =>
         requests('DELETE', API_BASE_URL + "/roles", data),
