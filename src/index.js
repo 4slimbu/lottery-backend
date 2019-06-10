@@ -11,6 +11,7 @@ import { Provider } from 'react-redux';
 import jwt_decode from "jwt-decode";
 import setAuthorizationToken from "./utils/axios/setAuthorizationToken";
 import {setAuth} from "./actions/authActions";
+import Echo from 'laravel-echo';
 
 const store = configureStore();
 const rootElement = document.getElementById('root');
@@ -56,3 +57,13 @@ if (module.hot) {
 }
 serviceWorker.unregister();
 
+window.io = require('socket.io-client');
+window.Echo = new Echo({
+    broadcaster: 'socket.io',
+    host: window.location.hostname + ':6001'
+});
+
+window.Echo.channel('test-event')
+    .listen('ExampleEvent', (e) => {
+        console.log(e);
+    });
