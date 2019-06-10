@@ -16,7 +16,7 @@ import AppFooter from '../../Layout/AppFooter/';
 
 // Theme Options
 import ThemeOptions from '../../Layout/ThemeOptions/';
-import NewRole from "./NewRole";
+import AllLotterySlots from "./AllLotterySlots";
 
 const Users = ({match}) => (
     <Fragment>
@@ -26,14 +26,7 @@ const Users = ({match}) => (
             <AppSidebar/>
             <div className="app-main__outer">
                 <div className="app-main__inner">
-                    <Route exact path={`${match.url}/all`} component={AllUsers}/>
-                    <Route exact path={`${match.url}/new`} component={NewUser}/>
-                    <Route exact path={`${match.url}/edit/:id`} component={EditUser}/>
-                    <Route exact path={`${match.url}/profile`} component={Profile}/>
-                    <Route exact path={`${match.url}/roles/new`} component={NewRole}/>
-                    <Route exact path={`${match.url}/roles`} component={AllRoles}/>
-                    <Route exact path={`${match.url}/permissions/new`} component={NewPermission}/>
-                    <Route exact path={`${match.url}/permissions`} component={AllPermissions}/>
+                    <Route exact path={`${match.url}/slots/all`} component={AllLotterySlots}/>
                 </div>
                 <AppFooter/>
             </div>

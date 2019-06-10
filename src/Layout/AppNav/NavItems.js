@@ -44,8 +44,8 @@ export const MainNav = [
         label: 'Lottery',
         content: [
             {
-                label: 'All Lottery Slots',
-                to: '#/dashboards/analytics',
+                label: 'All Slots',
+                to: '#/lottery/slots/all',
             },
             {
                 label: 'Add new',

@@ -95,10 +95,32 @@ const Permissions = {
 const Roles = {
     all: (query) =>
         requests('GET', API_BASE_URL + "/roles?" + query),
-    delete: (data) =>
-        requests('DELETE', API_BASE_URL + "/roles", data),
+    get: (id) =>
+        requests('GET',API_BASE_URL + `/roles/${id}`),
+    create: (data) =>
+        requests('POST', API_BASE_URL + "/roles", data),
     update: (data) =>
-        requests('PUT', API_BASE_URL + "/roles", data),
+        requests('PUT', API_BASE_URL + "/roles/" + data.id, data),
+    deleteMultiple: (data) =>
+        requests('DELETE', API_BASE_URL + "/roles", data),
+};
+
+/**
+ * Handles all Lottery related requests
+ */
+const Lottery = {
+    slots: {
+        all: (query) =>
+            requests('GET', API_BASE_URL + "/lottery/slots?" + query),
+        get: (id) =>
+            requests('GET',API_BASE_URL + `/lottery/slots/${id}`),
+        create: (data) =>
+            requests('POST', API_BASE_URL + "/lottery/slots", data),
+        update: (data) =>
+            requests('PUT', API_BASE_URL + "/lottery/slots/" + data.id, data),
+        deleteMultiple: (data) =>
+            requests('DELETE', API_BASE_URL + "/lottery/slots", data),
+    }
 };
 
 
@@ -174,6 +196,7 @@ export default {
     Users,
     Permissions,
     Roles,
+    Lottery,
     Business,
     BusinessCategory,
     Level,
