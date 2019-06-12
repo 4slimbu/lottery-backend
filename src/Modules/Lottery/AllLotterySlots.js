@@ -358,7 +358,7 @@ class AllLotterySlots extends Component {
                                         loading={isLoading} // Display the loading overlay when we need it
                                         onFetchData={this.fetchData} // Request new data when things change
                                         defaultPageSize={perPage}
-                                        filterable={true}
+                                        filterable={false}
                                         className="-striped -highlight"
                                         minRows={1}
                                     />
