@@ -63,7 +63,13 @@ window.Echo = new Echo({
     host: window.location.hostname + ':6001'
 });
 
-window.Echo.channel('test-event')
-    .listen('ExampleEvent', (e) => {
+window.Echo.channel('lottery')
+    .listen('LotterySlotClosedEvent', (e) => {
+        console.log(e);
+    }).listen('LotterySlotCreatedEvent', (e) => {
+        console.log(e);
+    }).listen('LotterySlotResultGeneratedEvent', (e) => {
+        console.log(e);
+    }).listen('ParticipantAddedEvent', (e) => {
         console.log(e);
     });
