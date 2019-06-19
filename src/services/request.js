@@ -112,8 +112,10 @@ const Lottery = {
     slots: {
         all: (query) =>
             requests('GET', API_BASE_URL + "/lottery/slots?" + query),
-        get: (id) =>
-            requests('GET',API_BASE_URL + `/lottery/slots/${id}`),
+        get: (data) =>
+            requests('GET',API_BASE_URL + `/lottery/slots/${data.id}?` + data.query),
+        getWinners: (data) =>
+            requests('GET',API_BASE_URL + `/lottery/slots/winners?` + data.query),
         create: (data) =>
             requests('POST', API_BASE_URL + "/lottery/slots", data),
         update: (data) =>

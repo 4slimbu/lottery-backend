@@ -24,7 +24,7 @@ export default class CommerceDashboard extends Component {
                         subheading="This dashboard was created as an example of the flexibility that ArchitectUI offers."
                         icon="pe-7s-graph icon-gradient bg-ripe-malin"
                     />
-                    <CommerceDashboard1/>
+                    {/*<CommerceDashboard1/>*/}
                 </ReactCSSTransitionGroup>
             </Fragment>
         )

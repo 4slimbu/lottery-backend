@@ -17,6 +17,7 @@ import AppFooter from '../../Layout/AppFooter/';
 // Theme Options
 import ThemeOptions from '../../Layout/ThemeOptions/';
 import NewRole from "./NewRole";
+import EditRole from "./EditRole";
 
 const Users = ({match}) => (
     <Fragment>
@@ -31,6 +32,7 @@ const Users = ({match}) => (
                     <Route exact path={`${match.url}/edit/:id`} component={EditUser}/>
                     <Route exact path={`${match.url}/profile`} component={Profile}/>
                     <Route exact path={`${match.url}/roles/new`} component={NewRole}/>
+                    <Route exact path={`${match.url}/roles/edit/:id`} component={EditRole}/>
                     <Route exact path={`${match.url}/roles`} component={AllRoles}/>
                     <Route exact path={`${match.url}/permissions/new`} component={NewPermission}/>
                     <Route exact path={`${match.url}/permissions`} component={AllPermissions}/>

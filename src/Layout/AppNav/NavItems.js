@@ -45,19 +45,11 @@ export const MainNav = [
         content: [
             {
                 label: 'All Slots',
-                to: '#/lottery/slots/all',
-            },
-            {
-                label: 'Add new',
-                to: '#/dashboards/commerce',
+                to: '#/lottery/slots',
             },
             {
                 label: 'Winners',
-                to: '#/dashboards/commerce',
-            },
-            {
-                label: 'Settings',
-                to: '#/dashboards/sales',
+                to: '#/lottery/winners',
             },
         ],
     },
@@ -95,31 +87,19 @@ export const MainNav = [
     },
     {
         icon: 'pe-7s-browser',
-        label: 'Auth',
+        label: 'Settings',
         content: [
             {
-                label: 'Login',
-                to: '#/auth/login',
+                label: 'General',
+                to: '#/settings/general',
             },
             {
-                label: 'Login Boxed',
-                to: '#/auth/login-boxed',
+                label: 'Lottery',
+                to: '#/settings/lottery',
             },
             {
-                label: 'Register',
-                to: '#/auth/register',
-            },
-            {
-                label: 'Register Boxed',
-                to: '#/auth/register-boxed',
-            },
-            {
-                label: 'Forgot Password',
-                to: '#/auth/forgot-password',
-            },
-            {
-                label: 'Forgot Password Boxed',
-                to: '#/auth/forgot-password-boxed',
+                label: 'Wallet',
+                to: '#/settings/wallet',
             },
         ],
     },

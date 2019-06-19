@@ -29,7 +29,7 @@ const PermissionList = (props) => {
 };
 
 
-class NewRole extends Component {
+class EditRole extends Component {
     constructor(props) {
         super(props);
 
@@ -49,8 +49,13 @@ class NewRole extends Component {
 
     async componentDidMount() {
         this._isMounted = true;
+        const {id} = this.props.match.params;
 
-        // limit
+        if (! id) {
+            this.props.history.push("/users/roles/all");
+        }
+
+        // Load Permissions
         let query = "&limit=500";
 
         this.setState({isLoading: true});
@@ -67,6 +72,25 @@ class NewRole extends Component {
                 this.setState({isLoading: false});
             }
         );
+
+        // Load Role
+        this.setState({isLoading: true});
+        this._isMounted && await this.props.makeRequest(request.Roles.get, id, {message: MESSAGES.LOGGING}).then(
+            (res) => {
+                if (res.data) {
+                    this.setState({
+                        name: res.data.name,
+                        label: res.data.label,
+                        selectedPermissionIds: _.map(res.data.permissions, 'id')
+                    });
+                }
+                this.setState({isLoading: false});
+            },
+            (errorData) => {
+                this.setState({isLoading: false});
+            }
+        );
+
     }
 
     componentWillUnmount() {
@@ -92,8 +116,8 @@ class NewRole extends Component {
 
     handleCheckBox(permissionId) {
         let selectedPermissionIds = [...this.state.selectedPermissionIds];
-        let index = selectedPermissionIds.indexOf(permissionId) !== -1;
-        if (index) {
+        let index = selectedPermissionIds.indexOf(permissionId);
+        if (index !== -1) {
             selectedPermissionIds.splice(index, 1);
         } else {
             selectedPermissionIds.push(permissionId);
@@ -113,14 +137,17 @@ class NewRole extends Component {
             name, label, selectedPermissionIds
         } = this.state;
 
+        const {id} = this.props.match.params;
+
         const data = {
+            id: id,
             name: name,
             label: label,
             permission_ids: selectedPermissionIds
         };
 
         this.setState({isLoading: true});
-        this.props.makeRequest(request.Roles.create, data, {message: MESSAGES.LOGGING}).then(
+        this.props.makeRequest(request.Roles.update, data, {message: MESSAGES.LOGGING}).then(
             (res) => {
                 this.props.history.push("/users/roles");
             },
@@ -153,7 +180,7 @@ class NewRole extends Component {
                     transitionLeave={false}>
                     <div>
                         <PageTitle
-                            heading="Add New Role"
+                            heading="Edit Role"
                             subheading="Choose between regular React Bootstrap tables or advanced dynamic ones."
                             icon="pe-7s-medal icon-gradient bg-tempting-azure"
                         />
@@ -162,7 +189,7 @@ class NewRole extends Component {
                         <Col md="12">
                             <Card className="main-card mb-3">
                                 <CardBody>
-                                    <CardTitle>New Role Form</CardTitle>
+                                    <CardTitle>Edit Role Form</CardTitle>
                                     <AvForm onSubmit={this.handleSubmit} model={this.state}>
                                         {error && <p className="text-danger">{error}</p>}
                                         <Row form>
@@ -224,7 +251,7 @@ class NewRole extends Component {
                                                     <Loader type="ball-beat" style={{transform: 'scale(0.3)'}}
                                                             color="white"/>
                                                     :
-                                                    "Add New Role"
+                                                    "Update Role"
                                                 }
                                             </Button>
                                         </div>
@@ -243,7 +270,7 @@ class NewRole extends Component {
     }
 }
 
-NewRole.propTypes = {
+EditRole.propTypes = {
     makeRequest: PropTypes.func.isRequired,
 };
 
@@ -258,4 +285,4 @@ function mapStateToProps(state) {
 
 export default withRouter(connect(mapStateToProps, {
     makeRequest,
-})(NewRole));
+})(EditRole));

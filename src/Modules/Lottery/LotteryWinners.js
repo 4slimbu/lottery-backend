@@ -13,11 +13,11 @@ import {Loader} from 'react-loaders';
 import {
     Button,
     Card,
-    CardBody,
+    CardBody, CardHeader,
     Col,
     DropdownItem,
     DropdownMenu,
-    DropdownToggle, FormGroup, ModalBody, ModalFooter, ModalHeader,
+    DropdownToggle, FormGroup, ListGroup, ListGroupItem, ModalBody, ModalFooter, ModalHeader,
     Row,
     UncontrolledButtonDropdown
 } from 'reactstrap';
@@ -28,7 +28,7 @@ import {MESSAGES} from "../../constants/messages";
 import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
 
 
-class AllLotterySlots extends Component {
+class LotteryWinners extends Component {
     constructor() {
         super();
         this.state = {
@@ -53,7 +53,6 @@ class AllLotterySlots extends Component {
         this.handleSelectAll = this.handleSelectAll.bind(this);
         this.handleIndividualSelect = this.handleIndividualSelect.bind(this);
         this.fetchData = this.fetchData.bind(this);
-        this.showDetail = this.showDetail.bind(this);
     }
 
     handleSelectAll() {
@@ -116,7 +115,7 @@ class AllLotterySlots extends Component {
 
         // filter only after having at least 2 characters
         if (state.filtered.length > 0 && state.filtered[0].value.length > 1) {
-            for (let i=0; i < state.filtered.length; i++) {
+            for (let i = 0; i < state.filtered.length; i++) {
                 query += "&" + state.filtered[i].id + "=" + state.filtered[i].value
             }
         }
@@ -124,12 +123,17 @@ class AllLotterySlots extends Component {
         // Start loading indicator and call api
         this.setState({isLoading: true});
 
-        await this.props.makeRequest(request.Lottery.slots.all, query, {message: MESSAGES.LOGGING}).then(
-            (responseData) => {
-                if (responseData.data) {
+        const data = {
+            query: query
+        };
+
+        await this.props.makeRequest(request.Lottery.slots.getWinners, data, {message: MESSAGES.LOGGING}).then(
+            (res) => {
+                if (res.data) {
                     this.setState({
-                        data: responseData.data,
-                        pages: responseData.meta.last_page,
+                        lotterySlot: res.data,
+                        data: res.data,
+                        pages: res.meta.last_page,
                         isLoading: false,
                         selectedIds: []
                     });
@@ -148,12 +152,6 @@ class AllLotterySlots extends Component {
         );
     }
 
-    showDetail(id) {
-        const {history} = this.props;
-
-        history.push('/lottery/slots/' + id);
-    }
-
     render() {
         const {data, pages, perPage, isLoading} = this.state;
 
@@ -168,7 +166,7 @@ class AllLotterySlots extends Component {
                     transitionLeave={false}>
                     <div>
                         <PageTitle
-                            heading="All Lottery Slots"
+                            heading="Lottery Slot"
                             subheading="Choose between regular React Bootstrap tables or advanced dynamic ones."
                             icon="pe-7s-medal icon-gradient bg-tempting-azure"
                         />
@@ -183,101 +181,38 @@ class AllLotterySlots extends Component {
                                             {
                                                 columns: [
                                                     {
-                                                        Header: <input type="checkbox"
-                                                                       checked={this.state.selectedIds.length > 0}
-                                                                       onChange={this.handleSelectAll}/>,
-                                                        Cell: props => (
-                                                            <div>
-                                                                <input type="checkbox"
-                                                                       checked={this.state.selectedIds.includes(props.original.id)}
-                                                                       onChange={() => this.handleIndividualSelect(props.original.id)}/>
-                                                            </div>
-                                                        ),
-                                                        filterable: false,
-                                                        width: 40,
-                                                        sortable: false,
-                                                    },
-                                                ]
-                                            },
-                                            {
-                                                columns: [
-                                                    {
-                                                        Header: 'Slot Ref',
-                                                        accessor: 'slot_ref'
+                                                        Header: 'Name',
+                                                        accessor: 'full_name'
                                                     },
                                                     {
-                                                        Header: 'Start Time',
-                                                        accessor: 'start_time'
-                                                    },
-                                                    {
-                                                        Header: 'End Time',
-                                                        accessor: 'end_time'
-                                                    },
-                                                    {
-                                                        Header: 'Has Winner',
-                                                        accessor: 'has_winner',
-                                                        Cell: row => (
-                                                            <div className="d-block w-100 text-center">
-                                                                {row.value > 0 ? 'Yes' : 'No'}
-                                                            </div>
-                                                        ),
-                                                    },
-                                                    {
-                                                        Header: 'Total Participants',
-                                                        accessor: 'total_participants'
-                                                    },
-                                                    {
-                                                        Header: 'Total Amount',
-                                                        accessor: 'total_amount'
-                                                    },
-                                                    {
-                                                        Header: 'Result',
-                                                        accessor: 'result',
+                                                        Header: 'Lottery Number',
+                                                        accessor: 'lottery_number',
                                                         Cell: props => (
                                                             <div className="d-block w-100 text-center">
-                                                                {props.original.result}
+                                                                {props.original.lottery_number}
                                                             </div>
                                                         ),
                                                     },
                                                     {
-                                                        Header: 'Status',
-                                                        accessor: 'status',
-                                                        Cell: row => (
+                                                        Header: 'Won Amount',
+                                                        accessor: 'won_amount',
+                                                        Cell: props => (
                                                             <div className="d-block w-100 text-center">
-                                                                {row.value > 0 ? 'Active' : 'Inactive'}
+                                                                {props.original.won_amount}
+                                                            </div>
+                                                        ),
+                                                    },
+                                                    {
+                                                        Header: 'Service Charge',
+                                                        accessor: 'service_charge',
+                                                        Cell: props => (
+                                                            <div className="d-block w-100 text-center">
+                                                                {props.original.service_charge}
                                                             </div>
                                                         ),
                                                     },
                                                 ]
                                             },
-                                            {
-                                                columns: [
-                                                    {
-                                                        Header: this.getActionsHeader,
-                                                        accessor: 'actions',
-                                                        Cell: props => (
-                                                            <div className="d-block w-100 text-center">
-                                                                <UncontrolledButtonDropdown>
-                                                                    <DropdownToggle caret
-                                                                                    className="btn-icon btn-icon-only btn btn-link"
-                                                                                    color="link">
-                                                                        <i className="lnr-menu-circle btn-icon-wrapper"/>
-                                                                    </DropdownToggle>
-                                                                    <DropdownMenu
-                                                                        className="rm-pointers dropdown-menu-hover-link">
-                                                                        <DropdownItem onClick={() => this.showDetail(props.original.id)}>
-                                                                            <i className="dropdown-icon lnr-inbox"> </i>
-                                                                            <span>View Detail</span>
-                                                                        </DropdownItem>
-                                                                    </DropdownMenu>
-                                                                </UncontrolledButtonDropdown>
-                                                            </div>
-                                                        ),
-                                                        filterable: false,
-                                                        sortable: false
-                                                    }
-                                                ]
-                                            }
                                         ]}
                                         manual // Forces table not to paginate or sort automatically, so we can handle it server-side
                                         pages={pages} // Display the total number of pages
@@ -298,7 +233,7 @@ class AllLotterySlots extends Component {
     }
 }
 
-AllLotterySlots.propTypes = {
+LotteryWinners.propTypes = {
     makeRequest: PropTypes.func.isRequired,
 };
 
@@ -313,4 +248,4 @@ function mapStateToProps(state) {
 
 export default withRouter(connect(mapStateToProps, {
     makeRequest,
-})(AllLotterySlots));
+})(LotteryWinners));
