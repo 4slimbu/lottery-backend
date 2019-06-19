@@ -1,14 +1,6 @@
 import React, {Fragment} from 'react';
 import {Route} from 'react-router-dom';
 
-import AllUsers from "./AllUsers";
-import NewUser from "./NewUser";
-import Profile from "./Profile";
-import AllPermissions from "./AllPermissions";
-import NewPermission from "./NewPermission";
-import EditUser from "./EditUser";
-import AllRoles from "./AllRoles";
-
 // Layout
 import AppHeader from '../../Layout/AppHeader/';
 import AppSidebar from '../../Layout/AppSidebar/';
