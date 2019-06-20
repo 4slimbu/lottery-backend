@@ -1,25 +1,17 @@
 import React, {Fragment} from 'react';
 import {Route} from 'react-router-dom';
-
-// DASHBOARDS
-
-import AnalyticsDashboard from './Analytics/';
-import SalesDashboard from './Sales/';
 import CommerceDashboard from './Commerce/';
-import CRMDashboard from './CRM/';
-import MinimalDashboard1 from './Minimal/Variation1';
-import MinimalDashboard2 from './Minimal/Variation2';
-
-// Layout
-
 import AppHeader from '../../Layout/AppHeader/';
 import AppSidebar from '../../Layout/AppSidebar/';
 import AppFooter from '../../Layout/AppFooter/';
-
 // Theme Options
 import ThemeOptions from '../../Layout/ThemeOptions/';
 
-const Users = ({match}) => (
+// DASHBOARDS
+
+// Layout
+
+const Dashboard = ({match}) => (
     <Fragment>
         <ThemeOptions/>
         <AppHeader/>
@@ -35,4 +27,4 @@ const Users = ({match}) => (
     </Fragment>
 );
 
-export default Users;
+export default Dashboard;
