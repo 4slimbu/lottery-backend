@@ -1,15 +1,7 @@
 import setAuthorizationToken from "../utils/axios/setAuthorizationToken";
 import jwt_decode from "jwt-decode";
 import {
-    setBusiness,
-    setBusinessCategories,
-    setBusinessOption,
-    setBusinessOptions,
-    syncBusinessStatus,
-    setLevel,
-    setLevels,
-    setSection,
-    setSections, setEvents, setAppSettings
+    setAppSettings
 } from "./appStatusAction";
 import {addFlashMessage} from "./flashMessageAction";
 import {logout, setAuth} from "./authActions";
@@ -54,26 +46,6 @@ export function handleSuccessResponseData(dispatch, responseData, isSilent) {
         setAuthorizationToken(token);
         dispatch(setAuth(jwt_decode(token)));
     }
-
-    if (responseData.levels) dispatch(setLevels(responseData.levels));
-
-    if (responseData.sections) dispatch(setSections(responseData.sections));
-
-    if (responseData.businessOptions) dispatch(setBusinessOptions(responseData.businessOptions));
-
-    if (responseData.level) dispatch(setLevel(responseData.level));
-
-    if (responseData.section) dispatch(setSection(responseData.section));
-
-    if (responseData.businessOption) dispatch(setBusinessOption(responseData.businessOption));
-
-    if (responseData.businessStatus) dispatch(syncBusinessStatus(responseData.businessStatus));
-
-    if (responseData.business) dispatch(setBusiness(responseData.business));
-
-    if (responseData.businessCategories) dispatch(setBusinessCategories(responseData.businessCategories));
-
-    if (responseData.events) dispatch(setEvents(responseData.events));
 
     if (responseData.settings) dispatch(setAppSettings(responseData.settings));
 

@@ -1,5 +1,5 @@
 import * as axios from "axios";
-import {apiBaseUrl, getEnv, newsFeedApiBaseUrl} from "../utils/helper/helperFunctions";
+import {apiBaseUrl, getEnv} from "../utils/helper/helperFunctions";
 
 const API_BASE_URL = "http://lottery-api.test/api/v1";
 /**
@@ -125,63 +125,22 @@ const Lottery = {
     }
 };
 
-
 /**
- * Handles all Business related requests
+ * Handles all Lottery related requests
  */
-const Business = {
-    get: () =>
-        requests('GET', apiBaseUrl("/user/business")),
-    getStatus: () =>
-        requests('GET', apiBaseUrl("/user/business/status")),
-    save: (data) =>
-        requests('PUT', apiBaseUrl("/user/business"), data),
-};
-
-/**
- * Handles all Business Category related requests
- */
-const BusinessCategory = {
-    all: () =>
-        requests('GET', apiBaseUrl("/business-categories")),
-};
-
-/**
- * Handles all Level related requests
- */
-const Level = {
-    all: () =>
-        requests('GET', apiBaseUrl("/levels?with=sections")),
-};
-
-/**
- * Handle all Business Option related requests
- */
-const BusinessOption = {
-    all: () =>
-        requests('GET', apiBaseUrl(`/business-options`)),
-    get: (id) =>
-        requests('GET', apiBaseUrl(`/business-option/${id}`)),
-    save: (data) =>
-        requests('POST', apiBaseUrl(`/business-option/${data.id}`), data.input)
-};
-
-/**
- * Handle all News related requests
- */
-const News = {
-    all: () =>
-        requests('GET', newsFeedApiBaseUrl("/wp-json/mbj-feed/v1/posts")),
-    byTag: (tag) =>
-        requests('GET', newsFeedApiBaseUrl(`/wp-json/mbj-feed/v1/posts?tag=${tag}`))
-};
-
-/**
- * Handle all News related requests
- */
-const Track = {
-    click: (data) =>
-        requests('GET', apiBaseUrl('/click?bo_id=' + data.boId + '&aff_id=' + data.affId)),
+const Wallet = {
+    all: (query) =>
+        requests('GET', API_BASE_URL + "/wallets?" + query),
+    get: (data) =>
+        requests('GET',API_BASE_URL + `/lottery/slots/${data.id}?` + data.query),
+    getWinners: (data) =>
+        requests('GET',API_BASE_URL + `/lottery/slots/winners?` + data.query),
+    create: (data) =>
+        requests('POST', API_BASE_URL + "/lottery/slots", data),
+    update: (data) =>
+        requests('PUT', API_BASE_URL + "/lottery/slots/" + data.id, data),
+    deleteMultiple: (data) =>
+        requests('DELETE', API_BASE_URL + "/lottery/slots", data),
 };
 
 /**
@@ -199,11 +158,6 @@ export default {
     Permissions,
     Roles,
     Lottery,
-    Business,
-    BusinessCategory,
-    Level,
-    BusinessOption,
-    News,
-    Track,
+    Wallet,
     AppSettings
 };

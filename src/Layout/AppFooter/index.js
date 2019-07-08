@@ -1,6 +1,4 @@
 import React, {Fragment} from 'react';
-import MegaMenuFooter from './Components/FooterMegaMenu';
-import FooterDots from './Components/FooterDots';
 
 class AppFooter extends React.Component {
     render() {
@@ -11,10 +9,9 @@ class AppFooter extends React.Component {
                 <div className="app-footer">
                     <div className="app-footer__inner">
                         <div className="app-footer-left">
-                            <FooterDots/>
                         </div>
                         <div className="app-footer-right">
-                            <MegaMenuFooter/>
+                            © 2019 Bitlot. All rights reserved.
                         </div>
                     </div>
                 </div>

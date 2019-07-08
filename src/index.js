@@ -57,19 +57,19 @@ if (module.hot) {
 }
 serviceWorker.unregister();
 
-window.io = require('socket.io-client');
-window.Echo = new Echo({
-    broadcaster: 'socket.io',
-    host: window.location.hostname + ':6001'
-});
-
-window.Echo.channel('lottery')
-    .listen('LotterySlotClosedEvent', (e) => {
-        console.log(e);
-    }).listen('LotterySlotCreatedEvent', (e) => {
-        console.log(e);
-    }).listen('LotterySlotResultGeneratedEvent', (e) => {
-        console.log(e);
-    }).listen('ParticipantAddedEvent', (e) => {
-        console.log(e);
-    });
+// window.io = require('socket.io-client');
+// window.Echo = new Echo({
+//     broadcaster: 'socket.io',
+//     host: window.location.hostname + ':6001'
+// });
+//
+// window.Echo.channel('lottery')
+//     .listen('LotterySlotClosedEvent', (e) => {
+//         console.log(e);
+//     }).listen('LotterySlotCreatedEvent', (e) => {
+//         console.log(e);
+//     }).listen('LotterySlotResultGeneratedEvent', (e) => {
+//         console.log(e);
+//     }).listen('ParticipantAddedEvent', (e) => {
+//         console.log(e);
+//     });

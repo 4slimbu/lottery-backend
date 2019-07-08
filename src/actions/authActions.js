@@ -1,6 +1,5 @@
 import setAuthorizationToken from "../utils/axios/setAuthorizationToken";
 import {SET_AUTH} from "../constants/actionTypes";
-import {setBusinessStatus} from "./appStatusAction";
 import {makeRequest} from "./requestAction";
 import request from "../services/request";
 import {addFlashMessage} from "./flashMessageAction";
@@ -21,7 +20,6 @@ export function logout() {
         localStorage.removeItem("jwtToken");
         setAuthorizationToken(false);
         dispatch(setAuth({}));
-        dispatch(setBusinessStatus({}));
         dispatch(addFlashMessage({type: "success", text: getCodeMessage(MESSAGES.LOGOUT_SUCCESS)}));
     }
 }

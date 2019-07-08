@@ -41,7 +41,7 @@ class PageTitle extends Component {
                         </div>
                     </div>
                     <div className="page-title-actions">
-                        {this.randomize(arr)}
+                        <TitleComponent3 />
                     </div>
                 </div>
             </div>

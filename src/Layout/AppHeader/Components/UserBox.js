@@ -39,14 +39,6 @@ class UserBox extends React.Component {
         this.logoutHandler = this.logoutHandler.bind(this);
     }
 
-    notify2 = () => this.toastId = toast("You don't have any new items in your calendar for today! Go out and play!", {
-        transition: Bounce,
-        closeButton: true,
-        autoClose: 5000,
-        position: 'bottom-center',
-        type: 'success'
-    });
-
     logoutHandler() {
         const {logout, history} = this.props;
 
@@ -117,15 +109,6 @@ class UserBox extends React.Component {
                                     </DropdownMenu>
                                 </UncontrolledButtonDropdown>
                             </div>
-                            <div className="widget-content-left  ml-3 header-user-info">
-                                <div className="widget-heading">
-                                    {user.full_name}
-                                </div>
-                                <div className="widget-subheading">
-
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </div>

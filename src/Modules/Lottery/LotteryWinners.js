@@ -6,26 +6,12 @@ import {connect} from "react-redux";
 import {makeRequest} from "../../actions/requestAction";
 import request from "../../services/request";
 import * as _ from "lodash";
-import SweetAlert from 'sweetalert-react';
-import Rodal from 'rodal';
-import {Loader} from 'react-loaders';
 
-import {
-    Button,
-    Card,
-    CardBody, CardHeader,
-    Col,
-    DropdownItem,
-    DropdownMenu,
-    DropdownToggle, FormGroup, ListGroup, ListGroupItem, ModalBody, ModalFooter, ModalHeader,
-    Row,
-    UncontrolledButtonDropdown
-} from 'reactstrap';
+import {Card, CardBody, Col, Row} from 'reactstrap';
 
 import ReactTable from "react-table";
 import PageTitle from '../../Layout/AppMain/PageTitle';
 import {MESSAGES} from "../../constants/messages";
-import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
 
 
 class LotteryWinners extends Component {

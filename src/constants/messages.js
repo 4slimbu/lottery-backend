@@ -23,9 +23,6 @@ export const MESSAGES = {
 
     // Error Messages
     ERR_VALIDATION_FAILED: "Validation Failed",
-    ERR_ABN_INVALID: "ABN is invalid",
-    ERR_ABN_REQUIRED: "ABN is required",
-    ERR_BUSINESS_NAME_REQUIRED: "Business name is required",
     ERR_EMAIL_ALREADY_EXIST: "User with given email is already registered",
     ERR_EMAIL_INVALID: "Invalid Email",
     ERR_EMAIL_REQUIRED: "Email is required",

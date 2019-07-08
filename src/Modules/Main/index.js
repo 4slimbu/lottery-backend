@@ -1,8 +1,8 @@
-import React, {Fragment} from 'react';
+import React, {Fragment, lazy, Suspense} from 'react';
 import {connect} from 'react-redux';
 import cx from 'classnames';
 import {withRouter} from 'react-router-dom';
-
+import Loader from 'react-loaders'
 import ResizeDetector from 'react-resize-detector';
 
 
@@ -44,7 +44,21 @@ class Main extends React.Component {
                             {'sidebar-mobile-open': enableMobileMenu},
                             {'body-tabs-shadow-btn': enablePageTabsAlt},
                         )}>
-                            <AppMain/>
+                            <Suspense fallback={
+                                <div className="loader-container">
+                                    <div className="loader-container-inner">
+                                        <div className="text-center">
+                                            <Loader type="line-scale-party"/>
+                                        </div>
+                                        <h6 className="mt-3">
+                                            Please wait while we load all the components ...
+                                        </h6>
+                                    </div>
+                                </div>
+                            }>
+                                <AppMain/>
+                            </Suspense>
+
                         </div>
                     </Fragment>
                 )}
