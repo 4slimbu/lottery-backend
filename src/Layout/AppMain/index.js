@@ -11,6 +11,7 @@ import {makeRequest} from "../../actions/requestAction";
 
 const Users = lazy(() => import('../../Modules/Users'));
 const Lottery = lazy(() => import('../../Modules/Lottery'));
+const Wallet = lazy(() => import('../../Modules/Wallet'));
 const UserPages = lazy(() => import('../../Modules/UserPages'));
 const Applications = lazy(() => import('../../Modules/Applications'));
 const Dashboards = lazy(() => import('../../Modules/Dashboards'));
@@ -188,6 +189,7 @@ class AppMain extends Component {
                     <Route path="/dashboards" component={Dashboards}/>
                     <Route path="/users" component={Users}/>
                     <Route path="/lottery" component={Lottery}/>
+                    <Route path="/wallets" component={Wallet}/>
                 </Suspense>
 
                 <Route exact path="/" render={() => (

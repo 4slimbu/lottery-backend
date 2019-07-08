@@ -10,9 +10,9 @@ import AppFooter from '../../Layout/AppFooter/';
 import ThemeOptions from '../../Layout/ThemeOptions/';
 import AllLotterySlots from "./AllLotterySlots";
 import LotterySlotDetail from "./LotterySlotDetail";
-import LotteryWinners from "./LotteryWinners";
+import AllWallets from "../Lottery/AllWallets";
 
-const Wallet = ({match}) => (
+const Users = ({match}) => (
     <Fragment>
         <ThemeOptions/>
         <AppHeader/>
@@ -20,7 +20,7 @@ const Wallet = ({match}) => (
             <AppSidebar/>
             <div className="app-main__outer">
                 <div className="app-main__inner">
-                    <Route exact path={`${match.url}/winners`} component={LotteryWinners}/>
+                    <Route exact path={`${match.url}/all`} component={AllWallets}/>
                     <Route exact path={`${match.url}/slots/:id`} component={LotterySlotDetail}/>
                     <Route exact path={`${match.url}/slots`} component={AllLotterySlots}/>
                 </div>
@@ -30,4 +30,4 @@ const Wallet = ({match}) => (
     </Fragment>
 );
 
-export default Wallet;
+export default Users;

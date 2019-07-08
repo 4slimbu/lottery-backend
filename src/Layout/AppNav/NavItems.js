@@ -59,15 +59,15 @@ export const MainNav = [
         content: [
             {
                 label: 'All Wallets',
-                to: '#/dashboards/analytics',
+                to: '#/wallets/all',
             },
             {
                 label: 'Add New',
-                to: '#/dashboards/commerce',
+                to: '#/wallets/new',
             },
             {
                 label: 'Withdrawal Requests',
-                to: '#/dashboards/sales',
+                to: '#/wallets/withdraw-requests/all',
             },
         ],
     },

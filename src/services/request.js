@@ -125,6 +125,23 @@ const Lottery = {
     }
 };
 
+/**
+ * Handles all Lottery related requests
+ */
+const Wallet = {
+    all: (query) =>
+        requests('GET', API_BASE_URL + "/wallets?" + query),
+    get: (data) =>
+        requests('GET',API_BASE_URL + `/lottery/slots/${data.id}?` + data.query),
+    getWinners: (data) =>
+        requests('GET',API_BASE_URL + `/lottery/slots/winners?` + data.query),
+    create: (data) =>
+        requests('POST', API_BASE_URL + "/lottery/slots", data),
+    update: (data) =>
+        requests('PUT', API_BASE_URL + "/lottery/slots/" + data.id, data),
+    deleteMultiple: (data) =>
+        requests('DELETE', API_BASE_URL + "/lottery/slots", data),
+};
 
 /**
  * Handles all Business related requests
@@ -199,6 +216,7 @@ export default {
     Permissions,
     Roles,
     Lottery,
+    Wallet,
     Business,
     BusinessCategory,
     Level,
