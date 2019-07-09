@@ -26,7 +26,6 @@ import ReactTable from "react-table";
 import PageTitle from '../../Layout/AppMain/PageTitle';
 import {MESSAGES} from "../../constants/messages";
 import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
-import {inAppCoin, inCurrency} from "../../utils/helper/helperFunctions";
 
 
 class AllWallets extends React.Component {
@@ -298,48 +297,15 @@ class AllWallets extends React.Component {
                                                     },
                                                     {
                                                         Header: 'Won',
-                                                        accessor: 'won',
-                                                        Cell: props => (
-                                                            <div>
-                                                                <div className="widget-content p-0">
-                                                                    <div className="widget-content-wrapper">
-                                                                        <div className="widget-heading">
-                                                                            { inAppCoin(props.value) }
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )
+                                                        accessor: 'won'
                                                     },
                                                     {
                                                         Header: 'Pending Withdraw',
-                                                        accessor: 'pending_withdraw',
-                                                        Cell: props => (
-                                                            <div>
-                                                                <div className="widget-content p-0">
-                                                                    <div className="widget-content-wrapper">
-                                                                        <div className="widget-heading">
-                                                                            { inCurrency(props.value) }
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )
+                                                        accessor: 'pending_withdraw'
                                                     },
                                                     {
                                                         Header: 'Deposit',
-                                                        accessor: 'deposit',
-                                                        Cell: props => (
-                                                            <div>
-                                                                <div className="widget-content p-0">
-                                                                    <div className="widget-content-wrapper">
-                                                                        <div className="widget-heading">
-                                                                            { inCurrency(props.value) }
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        )
+                                                        accessor: 'deposit'
                                                     },
                                                 ]
                                             },
