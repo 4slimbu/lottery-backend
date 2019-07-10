@@ -26,9 +26,10 @@ import ReactTable from "react-table";
 import PageTitle from '../../Layout/AppMain/PageTitle';
 import {MESSAGES} from "../../constants/messages";
 import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
+import {inCurrency} from "../../utils/helper/helperFunctions";
 
 
-class AllWallets extends React.Component {
+class WithdrawRequests extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -152,7 +153,7 @@ class AllWallets extends React.Component {
         // Start loading indicator and call api
         this.setState({isLoading: true});
 
-        await this.props.makeRequest(request.Wallet.all, query, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Wallet.withdrawRequests, query, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 if (responseData.data) {
                     this.setState({
@@ -196,19 +197,21 @@ class AllWallets extends React.Component {
 
     async handleQuickEdit() {
         const data = {
-            user_ids: this.state.selectedIds,
-            is_active: this.state.quickEdit.status
+            withdraw_request_ids: this.state.selectedIds,
+            status: this.state.quickEdit.status
         };
 
         this.setState({isUpdating: true});
 
-        await this.props.makeRequest(request.Users.updateMultiple, data, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Wallet.updateMultipleWithdrawRequest, data, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 this.setState({isUpdating: false});
                 this.fetchData(this.state.reactTableState);
+                this.setState({showQuickEditBox: false});
             },
             (errorData) => {
                 this.setState({isUpdating: false});
+                this.setState({showQuickEditBox: false});
             }
         );
 
@@ -247,8 +250,8 @@ class AllWallets extends React.Component {
                     transitionLeave={false}>
                     <div>
                         <PageTitle
-                            heading="All Wallets"
-                            subheading="Choose between regular React Bootstrap tables or advanced dynamic ones."
+                            heading="All Withdraw Requests"
+                            subheading="View and update all withdraw requests"
                             icon="pe-7s-medal icon-gradient bg-tempting-azure"
                         />
                     </div>
@@ -296,20 +299,35 @@ class AllWallets extends React.Component {
                                                         )
                                                     },
                                                     {
-                                                        Header: 'Won',
-                                                        accessor: 'won',
-                                                        filterable: false,
-                                                    },
-                                                    {
-                                                        Header: 'Pending Withdraw',
-                                                        accessor: 'pending_withdraw',
+                                                        Header: 'Amount',
+                                                        accessor: 'amount',
+                                                        Cell: props => (
+                                                            <div>
+                                                                <div className="widget-content p-0">
+                                                                    <div className="widget-content-wrapper">
+                                                                        <div className="widget-heading">
+                                                                            { inCurrency(props.value) }
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        ),
                                                         filterable: false
                                                     },
                                                     {
-                                                        Header: 'Deposit',
-                                                        accessor: 'deposit',
+                                                        Header: 'Status',
+                                                        accessor: 'status'
+                                                    },
+                                                    {
+                                                        Header: 'Created On',
+                                                        accessor: 'created_at',
                                                         filterable: false
                                                     },
+                                                    {
+                                                        Header: 'Updated On',
+                                                        accessor: 'updated_at',
+                                                        filterable: false
+                                                    }
                                                 ]
                                             },
                                             {
@@ -330,10 +348,6 @@ class AllWallets extends React.Component {
                                                                         <DropdownItem onClick={() => this.showQuickEditBox(props.original.id)}>
                                                                             <i className="dropdown-icon lnr-inbox"> </i>
                                                                             <span>Quick Edit</span>
-                                                                        </DropdownItem>
-                                                                        <DropdownItem onClick={() => this.props.history.push("/users/edit/" + props.original.id)}>
-                                                                            <i className="dropdown-icon lnr-inbox"> </i>
-                                                                            <span>Edit</span>
                                                                         </DropdownItem>
                                                                         <DropdownItem onClick={() => this.showDeleteConfirmationBox(props.original.id)}>
                                                                             <i className="dropdown-icon lnr-file-empty"> </i>
@@ -403,8 +417,10 @@ class AllWallets extends React.Component {
                                                          onChange={this.handleChange}
                                                          value={quickEdit.status}
                                                 >
-                                                    <option value={0}>In Active</option>
-                                                    <option value={1}>Active</option>
+                                                    <option value="pending">Pending</option>
+                                                    <option value="processing">Processing</option>
+                                                    <option value="completed">Completed</option>
+                                                    <option value="failed">Failed</option>
                                                 </AvField>
                                             </AvGroup>
                                         </FormGroup>
@@ -429,7 +445,7 @@ class AllWallets extends React.Component {
     }
 }
 
-AllWallets.propTypes = {
+WithdrawRequests.propTypes = {
     makeRequest: PropTypes.func.isRequired,
 };
 
@@ -444,4 +460,4 @@ function mapStateToProps(state) {
 
 export default withRouter(connect(mapStateToProps, {
     makeRequest,
-})(AllWallets));
+})(WithdrawRequests));

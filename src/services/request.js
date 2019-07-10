@@ -131,16 +131,10 @@ const Lottery = {
 const Wallet = {
     all: (query) =>
         requests('GET', API_BASE_URL + "/wallets?" + query),
-    get: (data) =>
-        requests('GET',API_BASE_URL + `/lottery/slots/${data.id}?` + data.query),
-    getWinners: (data) =>
-        requests('GET',API_BASE_URL + `/lottery/slots/winners?` + data.query),
-    create: (data) =>
-        requests('POST', API_BASE_URL + "/lottery/slots", data),
-    update: (data) =>
-        requests('PUT', API_BASE_URL + "/lottery/slots/" + data.id, data),
-    deleteMultiple: (data) =>
-        requests('DELETE', API_BASE_URL + "/lottery/slots", data),
+    withdrawRequests: (query) =>
+        requests('GET', API_BASE_URL + "/wallets/withdraw-requests?" + query),
+    updateMultipleWithdrawRequest: (data) =>
+        requests('PUT', API_BASE_URL + "/wallets/withdraw-requests", data),
 };
 
 /**

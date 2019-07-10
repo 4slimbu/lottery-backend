@@ -7,6 +7,7 @@ import AppFooter from '../../Layout/AppFooter/';
 // Theme Options
 import ThemeOptions from '../../Layout/ThemeOptions/';
 import AllWallets from "./AllWallets";
+import AllWithdrawRequests from "./AllWithdrawRequests";
 
 const Users = ({match}) => (
     <Fragment>
@@ -17,6 +18,7 @@ const Users = ({match}) => (
             <div className="app-main__outer">
                 <div className="app-main__inner">
                     <Route exact path={`${match.url}/all`} component={AllWallets}/>
+                    <Route exact path={`${match.url}/withdraw-requests/all`} component={AllWithdrawRequests}/>
                 </div>
                 <AppFooter/>
             </div>
