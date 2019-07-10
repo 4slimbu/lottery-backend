@@ -12,9 +12,8 @@ import AllLotterySlots from "./AllLotterySlots";
 import LotterySlotDetail from "./LotterySlotDetail";
 import LotteryWinners from "./LotteryWinners";
 
-const Wallet = ({match}) => (
+const Lottery = ({match}) => (
     <Fragment>
-        <ThemeOptions/>
         <AppHeader/>
         <div className="app-main">
             <AppSidebar/>
@@ -30,4 +29,4 @@ const Wallet = ({match}) => (
     </Fragment>
 );
 
-export default Wallet;
+export default Lottery;

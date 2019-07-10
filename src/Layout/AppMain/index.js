@@ -13,6 +13,7 @@ const Permissions = lazy(() => import('../../Modules/Permissions'));
 const Roles = lazy(() => import('../../Modules/Roles'));
 const Lottery = lazy(() => import('../../Modules/Lottery'));
 const Wallet = lazy(() => import('../../Modules/Wallet'));
+const Setting = lazy(() => import('../../Modules/Setting'));
 const Auth = lazy(() => import('../../Modules/Auth'));
 
 class AppMain extends Component {
@@ -56,7 +57,7 @@ class AppMain extends Component {
                     <Route path="/permissions" component={Permissions}/>
                     <Route path="/lottery" component={Lottery}/>
                     <Route path="/wallets" component={Wallet}/>
-                    <Route path="/setting" component={Wallet}/>
+                    <Route path="/settings" component={Setting}/>
                 </Suspense>
 
                 <Route exact path="/" render={() => (

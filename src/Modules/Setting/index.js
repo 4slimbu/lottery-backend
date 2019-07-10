@@ -6,18 +6,18 @@ import AppSidebar from '../../Layout/AppSidebar/';
 import AppFooter from '../../Layout/AppFooter/';
 // Theme Options
 import ThemeOptions from '../../Layout/ThemeOptions/';
-import AllWallets from "./AllWallets";
-import AllWithdrawRequests from "./AllWithdrawRequests";
+import AllSettings from "./AllSettings";
 
-const Wallet = ({match}) => (
+const Setting = ({match}) => (
     <Fragment>
         <AppHeader/>
         <div className="app-main">
             <AppSidebar/>
             <div className="app-main__outer">
                 <div className="app-main__inner">
-                    <Route exact path={`${match.url}/all`} component={AllWallets}/>
-                    <Route exact path={`${match.url}/withdraw-requests/all`} component={AllWithdrawRequests}/>
+                    <Route exact path={`${match.url}/all`} component={AllSettings}/>
+                    {/*<Route exact path={`${match.url}/lottery`} component={AllSettings}/>*/}
+                    {/*<Route exact path={`${match.url}/wallet`} component={AllSettings}/>*/}
                 </div>
                 <AppFooter/>
             </div>
@@ -25,4 +25,4 @@ const Wallet = ({match}) => (
     </Fragment>
 );
 
-export default Wallet;
+export default Setting;

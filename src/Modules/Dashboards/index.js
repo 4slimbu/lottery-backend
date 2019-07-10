@@ -14,7 +14,6 @@ import PageTitle from "../../Layout/AppMain/PageTitle";
 
 const Dashboard = ({match}) => (
     <Fragment>
-        <ThemeOptions/>
         <AppHeader/>
         <div className="app-main">
             <AppSidebar/>

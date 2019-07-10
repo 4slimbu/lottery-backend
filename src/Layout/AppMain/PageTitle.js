@@ -34,15 +34,15 @@ class PageTitle extends Component {
                         </div>
                         <div>
                             {heading}
-                            <div
-                                className={cx("page-title-subheading", {'d-none': !enablePageTitleSubheading})}>
-                                {subheading}
-                            </div>
+                            {/*<div*/}
+                                {/*className={cx("page-title-subheading", {'d-none': !enablePageTitleSubheading})}>*/}
+                                {/*{subheading}*/}
+                            {/*</div>*/}
                         </div>
                     </div>
-                    <div className="page-title-actions">
-                        <TitleComponent3 />
-                    </div>
+                    {/*<div className="page-title-actions">*/}
+                        {/*<TitleComponent3 />*/}
+                    {/*</div>*/}
                 </div>
             </div>
         );

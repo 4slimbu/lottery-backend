@@ -97,17 +97,17 @@ export const MainNav = [
         label: 'Settings',
         content: [
             {
-                label: 'General',
-                to: '#/settings/general',
+                label: 'All',
+                to: '#/settings/all',
             },
-            {
-                label: 'Lottery',
-                to: '#/settings/lottery',
-            },
-            {
-                label: 'Wallet',
-                to: '#/settings/wallet',
-            },
+            // {
+            //     label: 'Lottery',
+            //     to: '#/settings/lottery',
+            // },
+            // {
+            //     label: 'Wallet',
+            //     to: '#/settings/wallet',
+            // },
         ],
     },
 ];

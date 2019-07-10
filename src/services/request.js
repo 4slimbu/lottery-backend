@@ -140,6 +140,16 @@ const Wallet = {
 /**
  * Handle all News related requests
  */
+const Setting = {
+    all: (query) =>
+        requests('GET', API_BASE_URL + "/settings?" + query),
+    update: (data) =>
+        requests('PUT', API_BASE_URL + "/settings/" + data.id, data),
+};
+
+/**
+ * Handle all News related requests
+ */
 const AppSettings = {
     all: (data) =>
         requests('GET', apiBaseUrl('/app-settings')),
@@ -153,5 +163,6 @@ export default {
     Roles,
     Lottery,
     Wallet,
+    Setting,
     AppSettings
 };
