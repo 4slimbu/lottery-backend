@@ -104,7 +104,7 @@ class Settings extends React.Component {
         // Start loading indicator and call api
         this.setState({isLoading: true});
 
-        await this.props.makeRequest(request.Setting.all, query, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Settings.all, query, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 if (responseData.data) {
                     this.setState({
@@ -148,7 +148,7 @@ class Settings extends React.Component {
 
         this.setState({isUpdating: true});
 
-        await this.props.makeRequest(request.Setting.update, data, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Settings.update, data, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 this.setState({isUpdating: false});
                 this.fetchData(this.state.reactTableState);

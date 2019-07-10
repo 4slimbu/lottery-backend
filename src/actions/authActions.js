@@ -1,5 +1,5 @@
 import setAuthorizationToken from "../utils/axios/setAuthorizationToken";
-import {SET_AUTH} from "../constants/actionTypes";
+import {SET_AUTH, SET_USER} from "../constants/actionTypes";
 import {makeRequest} from "./requestAction";
 import request from "../services/request";
 import {addFlashMessage} from "./flashMessageAction";
@@ -10,6 +10,13 @@ export function setAuth(payload) {
     return {
         type: SET_AUTH,
         payload
+    }
+}
+
+export function setUser(user) {
+    return {
+        type: SET_USER,
+        user
     }
 }
 

@@ -1,10 +1,15 @@
-import {
-    SET_APP_SETTINGS,
-} from "../constants/actionTypes";
+import {SET_CURRENCIES, SET_SETTINGS,} from "../constants/actionTypes";
 
-export function setAppSettings(settings) {
+export function setCurrencies(currencies) {
     return {
-        type: SET_APP_SETTINGS,
+        type: SET_CURRENCIES,
+        currencies
+    }
+}
+
+export function setSettings(settings) {
+    return {
+        type: SET_SETTINGS,
         settings
     }
 }

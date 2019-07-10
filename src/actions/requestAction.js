@@ -1,10 +1,7 @@
 import setAuthorizationToken from "../utils/axios/setAuthorizationToken";
 import jwt_decode from "jwt-decode";
-import {
-    setAppSettings
-} from "./appStatusAction";
 import {addFlashMessage} from "./flashMessageAction";
-import {logout, setAuth} from "./authActions";
+import {logout, setAuth, setUser} from "./authActions";
 import {getCodeMessage} from "../utils/helper/helperFunctions";
 import {MESSAGES} from "../constants/messages";
 import {addLoadingMessage, deleteLoadingMessage} from "./loadingMessageAction";
@@ -47,7 +44,11 @@ export function handleSuccessResponseData(dispatch, responseData, isSilent) {
         dispatch(setAuth(jwt_decode(token)));
     }
 
-    if (responseData.settings) dispatch(setAppSettings(responseData.settings));
+    const user = responseData.user;
+    if (user) {
+        localStorage.setItem("user", user);
+        dispatch(setUser(user));
+    }
 
     if (responseData.successCode && responseData.successCode !== 'FETCHED' && responseData.successCode !== 'TRACKED' && !isSilent) {
         dispatch(addFlashMessage({type: "success", text: getCodeMessage(responseData.successCode)}))

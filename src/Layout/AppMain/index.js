@@ -5,6 +5,9 @@ import Loader from 'react-loaders'
 import {ToastContainer,} from 'react-toastify';
 import {connect} from "react-redux";
 import {makeRequest} from "../../actions/requestAction";
+import {MESSAGES} from "../../constants/messages";
+import {setCurrencies, setSettings} from "../../actions/appStatusAction";
+import request from "../../services/request";
 
 
 const Dashboards = lazy(() => import('../../Modules/Dashboards'));
@@ -17,6 +20,91 @@ const Setting = lazy(() => import('../../Modules/Setting'));
 const Auth = lazy(() => import('../../Modules/Auth'));
 
 class AppMain extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            isLoading: false
+        }
+    }
+
+    componentDidMount() {
+        this._isMounted = true;
+        this.setState({isLoading: true});
+        this._isMounted && this.bootstrap();
+    }
+
+    bootstrap() {
+        // Get settings
+        this.props.makeRequest(request.Settings.all, {query: ''}, {message: MESSAGES.LOGGING}).then(
+            (res) => {
+                if (res.data) {
+                    this.props.setSettings(res.data);
+                }
+                this.setState({isLoading: false});
+            },
+            (errorData) => {
+                this.setState({isLoading: false});
+            }
+        );
+
+        // Get currencies
+        this.props.makeRequest(request.Currencies.all, {query: ''}, {message: MESSAGES.LOGGING}).then(
+            (res) => {
+                if (res.data) {
+                    this.props.setCurrencies(res.data);
+                }
+                this.setState({isLoading: false});
+            },
+            (errorData) => {
+                this.setState({isLoading: false});
+            }
+        );
+
+        // Get Last slot
+        this.props.makeRequest(request.Lottery.slots.last, {}, {message: MESSAGES.LOGGING}).then(
+            (res) => {
+                if (res.data) {
+                    this.props.setLastSlot(res.data);
+                }
+                this.setState({isLoading: false});
+            },
+            (errorData) => {
+                this.setState({isLoading: false});
+            }
+        );
+
+        // Get Winners
+        this.props.makeRequest(request.Lottery.slots.winners, {query: ''}, {message: MESSAGES.LOGGING}).then(
+            (res) => {
+                if (res.data) {
+                    this.props.setLotteryWinners(res);
+                } else {
+                }
+            },
+            (errorData) => {
+                this.setState({isLoading: false});
+            }
+        );
+
+        // Get Active Slot
+        this.props.makeRequest(request.Lottery.slots.getActive, {}, {message: MESSAGES.LOGGING}).then(
+            (res) => {
+                if (res.data) {
+                    this.props.setLotterySlot(res.data);
+                    this.props.setLotteryPlayers(res.data.participants);
+                }
+            },
+            (errorData) => {
+                this.setState({isLoading: false});
+            }
+        );
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
+
     render () {
         const {isAuthenticated} = this.props.auth;
         return (
@@ -81,5 +169,5 @@ function mapStateToProps(state) {
 
 
 export default withRouter(connect(mapStateToProps, {
-    makeRequest,
+    makeRequest, setCurrencies, setSettings
 })(AppMain));
