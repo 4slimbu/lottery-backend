@@ -84,11 +84,11 @@ export const MainNav = [
         content: [
             {
                 label: 'All Pages',
-                to: '#/dashboards/analytics',
+                to: '#/pages/all',
             },
             {
                 label: 'Add New',
-                to: '#/dashboards/commerce',
+                to: '#/pages/new',
             },
         ],
     },

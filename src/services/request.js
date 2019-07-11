@@ -163,6 +163,23 @@ const Dashboard = {
         requests('GET', API_BASE_URL + "/dashboard/get-stats?" + data.query),
 };
 
+/**
+ * Handles all Pages related requests
+ */
+const Pages = {
+    all: (query) =>
+        requests('GET', API_BASE_URL + "/pages?" + query),
+    get: (id) =>
+        requests('GET',API_BASE_URL + `/pages/${id}`),
+    create: (data) =>
+        requests('POST', API_BASE_URL + "/pages", data),
+    update: (data) =>
+        requests('PUT', API_BASE_URL + "/pages/" + data.id, data),
+    delete: (data) =>
+        requests('DELETE', API_BASE_URL + "/pages/" + data.id, data),
+};
+
+
 export default {
     Auth,
     Users,
@@ -173,4 +190,5 @@ export default {
     Settings,
     Currencies,
     Dashboard,
+    Pages
 };
