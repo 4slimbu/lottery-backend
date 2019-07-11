@@ -155,6 +155,13 @@ const Currencies = {
         requests('GET', API_BASE_URL + "/currencies?" + data.query),
 };
 
+/**
+ * Handles all Dashboard related requests
+ */
+const Dashboard = {
+    getStats: (data) =>
+        requests('GET', API_BASE_URL + "/dashboard/get-stats?" + data.query),
+};
 
 export default {
     Auth,
@@ -164,5 +171,6 @@ export default {
     Lottery,
     Wallet,
     Settings,
-    Currencies
+    Currencies,
+    Dashboard,
 };

@@ -7,6 +7,7 @@ import AppFooter from '../../Layout/AppFooter/';
 // Theme Options
 import ThemeOptions from '../../Layout/ThemeOptions/';
 import PageTitle from "../../Layout/AppMain/PageTitle";
+import CommerceDashboard from "./Commerce/index";
 
 // DASHBOARDS
 
@@ -19,21 +20,7 @@ const Dashboard = ({match}) => (
             <AppSidebar/>
             <div className="app-main__outer">
                 <div className="app-main__inner">
-                    <Fragment>
-                        <ReactCSSTransitionGroup
-                            component="div"
-                            transitionName="TabsAnimation"
-                            transitionAppear={true}
-                            transitionAppearTimeout={0}
-                            transitionEnter={false}
-                            transitionLeave={false}>
-                            <PageTitle
-                                heading="Dashboard"
-                                subheading="Get quick view about your app status"
-                                icon="pe-7s-graph icon-gradient bg-ripe-malin"
-                            />
-                        </ReactCSSTransitionGroup>
-                    </Fragment>
+                    <Route path={`${match.url}`} component={CommerceDashboard}/>
                 </div>
                 <AppFooter/>
             </div>

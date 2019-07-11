@@ -12,7 +12,7 @@ class Nav extends Component {
     render() {
         return (
             <Fragment>
-                <h5 className="app-sidebar__heading">Menu</h5>
+                <div>&nbsp;</div>
                 <MetisMenu content={MainNav} activeLinkFromLocation className="vertical-nav-menu" iconNamePrefix="" classNameStateIcon="pe-7s-angle-down"/>
             </Fragment>
         );
