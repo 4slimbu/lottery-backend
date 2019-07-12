@@ -7,7 +7,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {Button, Card, CardBody, CardTitle, Col, Container, FormGroup, Row} from 'reactstrap';
 import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
 import {Loader} from "react-loaders";
-
+import {Editor} from "@tinymce/tinymce-react";
 import PageTitle from "../../Layout/AppMain/PageTitle";
 import {makeRequest} from "../../actions/requestAction";
 import request from "../../services/request";
@@ -27,13 +27,14 @@ class EditPage extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleEditorChange = this.handleEditorChange.bind(this);
     }
 
     async componentDidMount() {
         this._isMounted = true;
         const {id} = this.props.match.params;
 
-        if (! id) {
+        if (!id) {
             this.props.history.push("/pages/all");
         }
 
@@ -45,8 +46,9 @@ class EditPage extends Component {
                     this.setState({
                         title: res.data.title,
                         slug: res.data.slug,
-                        content: res.data.content,
+                        content: res.data.content
                     });
+
                 }
                 this.setState({isLoading: false});
             },
@@ -60,6 +62,12 @@ class EditPage extends Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    handleEditorChange = (e) => {
+        this.setState({
+            content: e.target.getContent()
+        });
+    };
 
     resetFields() {
         this.setState({
@@ -111,7 +119,7 @@ class EditPage extends Component {
 
     render() {
         const {
-            title, slug, content, isLoading
+            title, slug, isLoading, content
         } = this.state;
         return (
             <Fragment>
@@ -166,13 +174,14 @@ class EditPage extends Component {
                                             <Col md={12}>
                                                 <FormGroup>
                                                     <AvGroup>
-                                                        <AvField name="content"
-                                                                 label="Content"
-                                                                 type="textarea"
-                                                                 placeholder="Content..."
-                                                                 onChange={this.handleChange}
-                                                                 value={content}
-                                                                 rows={30}
+                                                        <label>Content</label>
+                                                        <Editor
+                                                            value={content}
+                                                            init={{
+                                                                plugins: 'link image code',
+                                                                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+                                                            }}
+                                                            onChange={this.handleEditorChange}
                                                         />
                                                     </AvGroup>
                                                 </FormGroup>
