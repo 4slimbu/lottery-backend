@@ -63,6 +63,8 @@ const Users = {
         requests('GET', API_BASE_URL + "/users?" + query),
     get: (id) =>
         requests('GET',API_BASE_URL + `/users/${id}`),
+    export: () =>
+        requests('GET',API_BASE_URL + `/users/export`),
     create: (data) =>
         requests('POST', API_BASE_URL + "/users", data),
     update: (data) =>
