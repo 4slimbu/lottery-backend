@@ -1,6 +1,6 @@
 {
   "name": "krypttolotto-backend",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Krypttolotto Backend",
   "author": "responsive-pixel.com",
@@ -41,7 +41,6 @@
     "m-react-splitters": "^1.2.0",
     "moment": "^2.24.0",
     "namor": "^1.1.2",
-    "node-sass": "^4.11.0",
     "pe7-icon": "^1.0.4",
     "rc-slider": "^8.6.9",
     "rc-tabs": "^9.6.3",
@@ -164,6 +163,7 @@
   },
   "browserslist": [],
   "devDependencies": {
+    "node-sass": "^4.12.0",
     "react-app-env": "^1.2.3"
   }
 }
