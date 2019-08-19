@@ -5,6 +5,7 @@ import cx from 'classnames';
 import TitleComponent1 from './PageTitleExamples/Variation1'
 import TitleComponent2 from './PageTitleExamples/Variation2'
 import TitleComponent3 from './PageTitleExamples/Variation3'
+import RightActions from "./PageTitleExamples/RightActions";
 
 class PageTitle extends Component {
     randomize(myArray) {
@@ -40,9 +41,9 @@ class PageTitle extends Component {
                             {/*</div>*/}
                         </div>
                     </div>
-                    {/*<div className="page-title-actions">*/}
-                        {/*<TitleComponent3 />*/}
-                    {/*</div>*/}
+                    <div className="page-title-actions">
+                        <RightActions />
+                    </div>
                 </div>
             </div>
         );

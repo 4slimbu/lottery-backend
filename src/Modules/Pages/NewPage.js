@@ -7,6 +7,7 @@ import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import {Button, Card, CardBody, CardTitle, Col, Container, FormGroup, Row} from 'reactstrap';
 import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
 import {Loader} from "react-loaders";
+import {Editor} from "@tinymce/tinymce-react";
 
 import PageTitle from "../../Layout/AppMain/PageTitle";
 import {makeRequest} from "../../actions/requestAction";
@@ -27,6 +28,7 @@ class NewPage extends Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleEditorChange = this.handleEditorChange.bind(this);
     }
 
     async componentDidMount() {
@@ -36,6 +38,12 @@ class NewPage extends Component {
     componentWillUnmount() {
         this._isMounted = false;
     }
+
+    handleEditorChange = (e) => {
+        this.setState({
+            content: e.target.getContent()
+        });
+    };
 
     resetFields() {
         this.setState({
@@ -86,6 +94,7 @@ class NewPage extends Component {
         const {
             title, slug, content, isLoading
         } = this.state;
+
         return (
             <Fragment>
                 <ReactCSSTransitionGroup
@@ -106,7 +115,7 @@ class NewPage extends Component {
                         <Col md="12">
                             <Card className="main-card mb-3">
                                 <CardBody>
-                                    <CardTitle>Edit Page Form </CardTitle>
+                                    <CardTitle>Add Page Form </CardTitle>
 
                                     <AvForm onSubmit={this.handleSubmit} model={this.state}>
                                         <Row form>
@@ -139,13 +148,14 @@ class NewPage extends Component {
                                             <Col md={12}>
                                                 <FormGroup>
                                                     <AvGroup>
-                                                        <AvField name="content"
-                                                                 label="Content"
-                                                                 type="textarea"
-                                                                 placeholder="Content..."
-                                                                 onChange={this.handleChange}
-                                                                 value={content}
-                                                                 rows={30}
+                                                        <label>Content</label>
+                                                        <Editor
+                                                            value={content}
+                                                            init={{
+                                                                plugins: 'link image code',
+                                                                toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+                                                            }}
+                                                            onChange={this.handleEditorChange}
                                                         />
                                                     </AvGroup>
                                                 </FormGroup>
@@ -158,7 +168,7 @@ class NewPage extends Component {
                                                     <Loader type="ball-beat" style={{transform: 'scale(0.3)'}}
                                                             color="white"/>
                                                     :
-                                                    "Update Page"
+                                                    "Create Page"
                                                 }
                                             </Button>
                                         </div>
