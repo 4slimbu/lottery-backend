@@ -1,7 +1,7 @@
 import * as axios from "axios";
 import {apiBaseUrl, getEnv} from "../utils/helper/helperFunctions";
 
-const API_BASE_URL = "http://lottery-api.test/api/v1";
+const API_BASE_URL = "https://0a510a96.ngrok.io/api/v1";
 /**
  * This handles all the api request. If REACT_APP_ENV = mock-api, then the data
  * is faked and returned as async promise object using mock data.
