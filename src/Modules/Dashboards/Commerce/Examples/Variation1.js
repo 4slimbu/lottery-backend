@@ -147,7 +147,7 @@ class CommerceDashboard1 extends Component {
 
     async bootstrap() {
 
-        await this.props.makeRequest(request.Dashboard.getStats, {}, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Dashboard.getStats, '', {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 if (responseData) {
                     this.setState({
@@ -166,7 +166,7 @@ class CommerceDashboard1 extends Component {
             }
         );
 
-        await this.props.makeRequest(request.Lottery.slots.all, {}, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Lottery.slots.all, '', {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 if (responseData.data) {
                     this.setState({

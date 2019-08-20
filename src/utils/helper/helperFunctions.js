@@ -1,7 +1,7 @@
-import {filter, find, findIndex, has, indexOf, map} from "lodash";
+import * as _ from "lodash";
+import {find, findIndex, indexOf} from "lodash";
 import {MESSAGES} from "../../constants/messages";
 import Cookies from 'universal-cookie';
-import * as _ from "lodash";
 
 /*
 ==========================================================================

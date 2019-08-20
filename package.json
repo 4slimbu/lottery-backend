@@ -1,10 +1,10 @@
 {
-  "name": "krypttolotto-backend",
+  "name": "kryptto-backend",
   "version": "0.1.1",
   "private": true,
-  "description": "Krypttolotto Backend",
+  "description": "Kryptto Backend",
   "author": "responsive-pixel.com",
-  "homepage": "http://backend.krypttolotto.com",
+  "homepage": "http://backend.kryptto.io",
   "repository": {
     "type": "git",
     "url": "git+https://bitbucket.org/responsivesudip/lottery-backend"

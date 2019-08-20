@@ -1,7 +1,8 @@
 import * as axios from "axios";
-import {apiBaseUrl, getEnv} from "../utils/helper/helperFunctions";
+import {getEnv} from "../utils/helper/helperFunctions";
 
-const API_BASE_URL = "https://0a510a96.ngrok.io/api/v1";
+const API_BASE_URL = "https://api.kryptto.io/api/v1";
+
 /**
  * This handles all the api request. If REACT_APP_ENV = mock-api, then the data
  * is faked and returned as async promise object using mock data.
@@ -39,20 +40,10 @@ const Auth = {
         requests('PUT', API_BASE_URL + "/logout"),
     register: (data) =>
         requests('POST', API_BASE_URL + "/register", data),
-    save: (data) =>
-        requests('PUT', apiBaseUrl("/user"), data),
     forgotPassword: (data) =>
         requests('POST', API_BASE_URL + "/forgot-password", data),
     resetPassword: (data) =>
         requests('PUT', API_BASE_URL + "/reset-password", data),
-    sendVerificationEmail: () =>
-        requests('GET', apiBaseUrl("/user/send-verification-email")),
-    verifyEmail: (data) =>
-        requests('POST', apiBaseUrl("/user/verify-email"), data),
-    checkIfExists: (data) =>
-        requests('POST', apiBaseUrl("/user/check-if-exists"), data),
-    loginSocialUser: (url) =>
-        requests('GET', apiBaseUrl(url)),
 };
 
 /**
@@ -161,8 +152,8 @@ const Currencies = {
  * Handles all Dashboard related requests
  */
 const Dashboard = {
-    getStats: (data) =>
-        requests('GET', API_BASE_URL + "/dashboard/get-stats?" + data.query),
+    getStats: (query) =>
+        requests('GET', API_BASE_URL + "/dashboard/get-stats?" + query),
 };
 
 /**

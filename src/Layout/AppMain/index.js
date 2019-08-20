@@ -37,7 +37,7 @@ class AppMain extends Component {
 
     bootstrap() {
         // Get settings
-        this.props.makeRequest(request.Settings.all, {query: ''}, {message: MESSAGES.LOGGING}).then(
+        this.props.makeRequest(request.Settings.all, '', {message: MESSAGES.LOGGING}).then(
             (res) => {
                 if (res.data) {
                     this.props.setSettings(res.data);
