@@ -1,0 +1,53 @@
+@import "themes/layout-variables";
+
+// logo styling
+.app-header__logo{
+	width: 210px;
+}
+.app-header__logo .logo-src{
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+	height: 27px;
+    width: 128px;
+}
+
+// Result Number styling
+.badge.badge-warning.rounded-circle{
+	width: 30px;
+	height: 30px;
+	background-color:transparent;
+	border:1px solid $primary;
+	color:$primary;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-left: 10px;
+}
+.badge.badge-warning.rounded-circle:first-child{
+	margin-left: 0;
+}
+
+// Table styling
+.ReactTable .rt-tbody .rt-td{
+	word-break: break-all;
+}
+
+// Button styling
+.btn-outline-warning:hover{
+	background-color:$primary;
+	color:$white;
+}
+.btn-outline-warning{
+	color:$primary;
+}
+
+.custom-height-big{
+	min-height: 411px;
+}
+.custom-height-small{
+	min-height: 205px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}

@@ -221,7 +221,7 @@ class CommerceDashboard1 extends Component {
                 <Container fluid>
                     <Row>
                         <Col lg="12" xl="6">
-                            <Card className="main-card mb-3">
+                            <Card className="main-card mb-3 custom-height-big">
                                 <CardBody>
                                     <CardTitle>
                                         Game Stats
@@ -235,7 +235,7 @@ class CommerceDashboard1 extends Component {
                                 <div className="grid-menu grid-menu-2col">
                                     <Row className="no-gutters">
                                         <Col sm="6">
-                                            <div className="widget-chart widget-chart-hover">
+                                            <div className="custom-height-small widget-chart widget-chart-hover">
                                                 <div className="icon-wrapper rounded-circle">
                                                     <div className="icon-wrapper-bg bg-primary"/>
                                                     <i className="lnr-cog text-primary"/>
@@ -249,7 +249,7 @@ class CommerceDashboard1 extends Component {
                                             </div>
                                         </Col>
                                         <Col sm="6">
-                                            <div className="widget-chart widget-chart-hover">
+                                            <div className="custom-height-small widget-chart widget-chart-hover">
                                                 <div className="icon-wrapper rounded-circle">
                                                     <div className="icon-wrapper-bg bg-info"/>
                                                     <i className="lnr-graduation-hat text-info"/>
@@ -263,7 +263,7 @@ class CommerceDashboard1 extends Component {
                                             </div>
                                         </Col>
                                         <Col sm="6">
-                                            <div className="widget-chart widget-chart-hover br-br">
+                                            <div className="custom-height-small widget-chart widget-chart-hover br-br">
                                                 <div className="icon-wrapper rounded-circle">
                                                     <div className="icon-wrapper-bg bg-success"/>
                                                     <i className="lnr-screen"/>
@@ -277,7 +277,7 @@ class CommerceDashboard1 extends Component {
                                             </div>
                                         </Col>
                                         <Col sm="6">
-                                            <div className="widget-chart widget-chart-hover">
+                                            <div className="custom-height-small widget-chart widget-chart-hover">
                                                 <div className="icon-wrapper rounded-circle">
                                                     <div className="icon-wrapper-bg bg-danger"/>
                                                     <i className="lnr-laptop-phone text-danger"/>
@@ -343,13 +343,13 @@ class CommerceDashboard1 extends Component {
                                                     <td className="text-center">
                                                         { inCurrency(lotterySlot.total_amount)}
                                                     </td>
-                                                    <td className="text-left">
-                                                        <div className="badge badge-warning">{ lotterySlot.result[0] }</div>
-                                                        <div className="badge badge-warning">{ lotterySlot.result[1] }</div>
-                                                        <div className="badge badge-warning">{ lotterySlot.result[2] }</div>
-                                                        <div className="badge badge-warning">{ lotterySlot.result[3] }</div>
-                                                        <div className="badge badge-warning">{ lotterySlot.result[4] }</div>
-                                                        <div className="badge badge-warning">{ lotterySlot.result[5] }</div>
+                                                    <td className="text-center">
+                                                        <div className="badge badge-warning rounded-circle">{ lotterySlot.result[0] }</div>
+                                                        <div className="badge badge-warning rounded-circle">{ lotterySlot.result[1] }</div>
+                                                        <div className="badge badge-warning rounded-circle">{ lotterySlot.result[2] }</div>
+                                                        <div className="badge badge-warning rounded-circle">{ lotterySlot.result[3] }</div>
+                                                        <div className="badge badge-warning rounded-circle">{ lotterySlot.result[4] }</div>
+                                                        <div className="badge badge-warning rounded-circle">{ lotterySlot.result[5] }</div>
                                                     </td>
                                                     <td className="text-center">
                                                         <Button size="sm" color={lotterySlot.has_winner == 1 ? 'success' : ''} id={'PopoverCustomT-1'}>
