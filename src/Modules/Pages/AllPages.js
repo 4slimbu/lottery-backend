@@ -7,17 +7,14 @@ import {makeRequest} from "../../actions/requestAction";
 import request from "../../services/request";
 import * as _ from "lodash";
 import SweetAlert from 'sweetalert-react';
-import Rodal from 'rodal';
-import {Loader} from 'react-loaders';
 
 import {
-    Button,
     Card,
     CardBody,
     Col,
     DropdownItem,
     DropdownMenu,
-    DropdownToggle, FormGroup, ModalBody, ModalFooter, ModalHeader,
+    DropdownToggle,
     Row,
     UncontrolledButtonDropdown
 } from 'reactstrap';
@@ -25,7 +22,6 @@ import {
 import ReactTable from "react-table";
 import PageTitle from '../../Layout/AppMain/PageTitle';
 import {MESSAGES} from "../../constants/messages";
-import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
 
 
 class AllPages extends React.Component {

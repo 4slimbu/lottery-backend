@@ -12,16 +12,19 @@ import PageTitle from "../../Layout/AppMain/PageTitle";
 import {makeRequest} from "../../actions/requestAction";
 import request from "../../services/request";
 import {MESSAGES} from "../../constants/messages";
+import Seo from "./Seo";
 
 class EditPage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            id: null,
             title: "",
             slug: "",
             content: "",
             error: "",
+            seo: null,
             isLoading: false,
         };
 
@@ -44,9 +47,11 @@ class EditPage extends Component {
             (res) => {
                 if (res.data) {
                     this.setState({
+                        id: res.data.id,
                         title: res.data.title,
                         slug: res.data.slug,
-                        content: res.data.content
+                        content: res.data.content,
+                        seo: res.data.seo
                     });
 
                 }
@@ -69,15 +74,6 @@ class EditPage extends Component {
         });
     };
 
-    resetFields() {
-        this.setState({
-            title: "",
-            slug: "",
-            content: "",
-            error: "",
-        })
-    }
-
     handleChange(e) {
         if (e.target && e.target.name) {
             this.setState({
@@ -93,10 +89,8 @@ class EditPage extends Component {
         }
 
         const {
-            title, slug, content
+            id, title, slug, content
         } = this.state;
-
-        const {id} = this.props.match.params;
 
         const data = {
             id: id,
@@ -119,8 +113,14 @@ class EditPage extends Component {
 
     render() {
         const {
-            title, slug, isLoading, content
+            id, title, slug, isLoading, content, seo
         } = this.state;
+
+        const seoProps = {
+            seoData: seo,
+            pageId: id
+        };
+
         return (
             <Fragment>
                 <ReactCSSTransitionGroup
@@ -185,6 +185,9 @@ class EditPage extends Component {
                                                         />
                                                     </AvGroup>
                                                 </FormGroup>
+                                            </Col>
+                                            <Col md={12}>
+                                                <Seo {...seoProps} />
                                             </Col>
                                         </Row>
                                         <Row className="divider"/>

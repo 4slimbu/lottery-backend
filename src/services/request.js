@@ -1,7 +1,7 @@
 import * as axios from "axios";
 import {getEnv} from "../utils/helper/helperFunctions";
 
-const API_BASE_URL = "https://api.kryptto.io/api/v1";
+const API_BASE_URL = getEnv('API_BASE_URL');
 
 /**
  * This handles all the api request. If REACT_APP_ENV = mock-api, then the data
@@ -172,6 +172,16 @@ const Pages = {
         requests('DELETE', API_BASE_URL + "/pages/" + data.id, data),
 };
 
+/**
+ * Handles all Pages related requests
+ */
+const Seo = {
+    get: (id) =>
+        requests('GET', API_BASE_URL + "/seo/" + id),
+    save: (seo) =>
+        requests('POST', API_BASE_URL + "/seo", seo)
+};
+
 
 export default {
     Auth,
@@ -183,5 +193,6 @@ export default {
     Settings,
     Currencies,
     Dashboard,
-    Pages
+    Pages,
+    Seo
 };
