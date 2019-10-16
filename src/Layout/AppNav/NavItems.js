@@ -51,6 +51,20 @@ export const MainNav = [
         ],
     },
     {
+        icon: 'pe-7s-id',
+        label: 'Currencies',
+        content: [
+            {
+                label: 'All Currencies',
+                to: '#/currencies/all',
+            },
+            {
+                label: 'Add New',
+                to: '#/currencies/new',
+            }
+        ],
+    },
+    {
         icon: 'pe-7s-display1',
         label: 'Lottery',
         content: [

@@ -146,6 +146,12 @@ const Settings = {
 const Currencies = {
     all: (data) =>
         requests('GET', API_BASE_URL + "/currencies?" + data.query),
+    create: (data) =>
+        requests('POST', API_BASE_URL + "/currencies", data),
+    update: (data) =>
+        requests('PUT', API_BASE_URL + "/currencies/" + data.id, data),
+    deleteMultiple: (data) =>
+        requests('DELETE', API_BASE_URL + "/currencies", data),
 };
 
 /**

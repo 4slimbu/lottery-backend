@@ -315,10 +315,6 @@ class AllRoles extends Component {
                                                                             <i className="dropdown-icon lnr-inbox"> </i>
                                                                             <span>Quick Edit</span>
                                                                         </DropdownItem>
-                                                                        <DropdownItem onClick={() => this.props.history.push("/users/roles/edit/" + props.original.id)}>
-                                                                            <i className="dropdown-icon lnr-inbox"> </i>
-                                                                            <span>Edit</span>
-                                                                        </DropdownItem>
                                                                         <DropdownItem onClick={() => this.showDeleteConfirmationBox(props.original.id)}>
                                                                             <i className="dropdown-icon lnr-file-empty"> </i>
                                                                             <span>Delete</span>

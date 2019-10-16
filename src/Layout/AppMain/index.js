@@ -14,6 +14,7 @@ const Dashboards = lazy(() => import('../../Modules/Dashboards'));
 const Users = lazy(() => import('../../Modules/Users'));
 const Permissions = lazy(() => import('../../Modules/Permissions'));
 const Roles = lazy(() => import('../../Modules/Roles'));
+const Currencies = lazy(() => import('../../Modules/Currencies'));
 const Lottery = lazy(() => import('../../Modules/Lottery'));
 const Wallet = lazy(() => import('../../Modules/Wallet'));
 const Setting = lazy(() => import('../../Modules/Setting'));
@@ -143,6 +144,7 @@ class AppMain extends Component {
                     <Route path="/dashboards" component={Dashboards}/>
                     <Route path="/users" component={Users}/>
                     <Route path="/roles" component={Roles}/>
+                    <Route path="/currencies" component={Currencies}/>
                     <Route path="/permissions" component={Permissions}/>
                     <Route path="/lottery" component={Lottery}/>
                     <Route path="/wallets" component={Wallet}/>

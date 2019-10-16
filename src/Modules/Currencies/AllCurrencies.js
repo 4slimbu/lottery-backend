@@ -6,14 +6,18 @@ import {connect} from "react-redux";
 import {makeRequest} from "../../actions/requestAction";
 import request from "../../services/request";
 import * as _ from "lodash";
+import SweetAlert from 'sweetalert-react';
+import Rodal from 'rodal';
+import {Loader} from 'react-loaders';
 
 import {
+    Button,
     Card,
     CardBody,
     Col,
     DropdownItem,
     DropdownMenu,
-    DropdownToggle,
+    DropdownToggle, FormGroup, ModalBody, ModalFooter, ModalHeader,
     Row,
     UncontrolledButtonDropdown
 } from 'reactstrap';
@@ -21,10 +25,10 @@ import {
 import ReactTable from "react-table";
 import PageTitle from '../../Layout/AppMain/PageTitle';
 import {MESSAGES} from "../../constants/messages";
-import {inCurrency} from "../../utils/helper/helperFunctions";
+import {AvField, AvForm, AvGroup} from "availity-reactstrap-validation";
 
 
-class AllLotterySlots extends Component {
+class AllCurrencies extends Component {
     constructor() {
         super();
         this.state = {
@@ -40,8 +44,8 @@ class AllLotterySlots extends Component {
             reactTableState: {},
             quickEdit: {
                 id: '',
-                name: '',
-                label: ''
+                currency: '',
+                valueInBits: ''
             }
         };
 
@@ -49,7 +53,12 @@ class AllLotterySlots extends Component {
         this.handleSelectAll = this.handleSelectAll.bind(this);
         this.handleIndividualSelect = this.handleIndividualSelect.bind(this);
         this.fetchData = this.fetchData.bind(this);
-        this.showDetail = this.showDetail.bind(this);
+        this.showDeleteConfirmationBox = this.showDeleteConfirmationBox.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.showQuickEditBox = this.showQuickEditBox.bind(this);
+        this.cancelQuickEdit = this.cancelQuickEdit.bind(this);
+        this.handleQuickEdit = this.handleQuickEdit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
 
     handleSelectAll() {
@@ -76,8 +85,32 @@ class AllLotterySlots extends Component {
         this.setState({selectedIds: selectedIds});
     }
 
+    handleChange(e) {
+        this.setState({
+            quickEdit: {
+                ...this.state.quickEdit,
+                [e.target.name]: e.target.value
+            }
+        });
+    }
+
     getActionsHeader = () => {
-        return <div> Actions </div>;
+        const dropDown = (
+            <UncontrolledButtonDropdown>
+                <DropdownToggle caret
+                                className="btn-icon btn-icon-only btn btn-link"
+                                color="link">
+                </DropdownToggle>
+                <DropdownMenu
+                    className="rm-pointers dropdown-menu-hover-link">
+                    <DropdownItem onClick={() => this.showDeleteConfirmationBox()}>
+                        <i className="dropdown-icon lnr-file-empty"> </i>
+                        <span>Delete</span>
+                    </DropdownItem>
+                </DropdownMenu>
+            </UncontrolledButtonDropdown>
+        );
+        return <div> Actions {dropDown} </div>;
     };
 
     async fetchData(state, instance = null) {
@@ -105,22 +138,20 @@ class AllLotterySlots extends Component {
             query += "&limit=" + state.pageSize;
         }
 
-        // if filter is on and doesn't have at least 1 characters, abort
-        if (state.filtered.length > 0 && state.filtered[0].value.length < 1) {
+        // if filter is on and doesn't have at least 2 characters, abort
+        if (state.filtered.length > 0 && state.filtered[0].value.length < 2) {
             return;
         }
 
         // filter only after having at least 2 characters
         if (state.filtered.length > 0 && state.filtered[0].value.length > 1) {
-            for (let i=0; i < state.filtered.length; i++) {
-                query += "&" + state.filtered[i].id + "=" + state.filtered[i].value
-            }
+            query += "&" + state.filtered[0].id + "=" + state.filtered[0].value
         }
 
         // Start loading indicator and call api
         this.setState({isLoading: true});
 
-        await this.props.makeRequest(request.Lottery.slots.all, query, {message: MESSAGES.LOGGING}).then(
+        await this.props.makeRequest(request.Currencies.all, query, {message: MESSAGES.LOGGING}).then(
             (responseData) => {
                 if (responseData.data) {
                     this.setState({
@@ -144,14 +175,72 @@ class AllLotterySlots extends Component {
         );
     }
 
-    showDetail(id) {
-        const {history} = this.props;
+    showDeleteConfirmationBox(id = null) {
+        if (id) {
+            this.setState({selectedIds: [id]});
+        }
+        this.setState({showDeleteConfirmationBox: true });
+    }
 
-        history.push('/lottery/slots/' + id);
+    showQuickEditBox(currency = null) {
+        if (currency) {
+            this.setState({
+                selectedIds: [currency.id],
+                quickEdit: {
+                    id: currency.id,
+                    currency: currency.currency,
+                    valueInBits: currency.value_in_bits
+                }
+            });
+        }
+        this.setState({showQuickEditBox: true});
+    }
+
+    cancelQuickEdit() {
+        this.setState({showQuickEditBox: false});
+    }
+
+    async handleQuickEdit() {
+        const data = {
+            id: this.state.quickEdit.id,
+            currency: this.state.quickEdit.currency,
+            value_in_bits: this.state.quickEdit.valueInBits,
+        };
+
+        this.setState({isUpdating: true});
+
+        await this.props.makeRequest(request.Currencies.update, data, {message: MESSAGES.LOGGING}).then(
+            (responseData) => {
+                this.setState({isUpdating: false});
+                this.fetchData(this.state.reactTableState);
+            },
+            (errorData) => {
+                this.setState({isUpdating: false});
+            }
+        );
+    }
+
+    async handleDelete() {
+        this.setState({isLoading: true});
+        this.setState({showDeleteConfirmationBox: false });
+
+        const data = {
+            currency_ids: this.state.selectedIds
+        };
+
+        await this.props.makeRequest(request.Currencies.deleteMultiple, data, {message: MESSAGES.LOGGING}).then(
+            (responseData) => {
+                this.setState({isLoading: false});
+                this.fetchData(this.state.reactTableState);
+            },
+            (errorData) => {
+                this.setState({isLoading: false});
+            }
+        );
     }
 
     render() {
-        const {data, pages, perPage, isLoading} = this.state;
+        const {data, pages, perPage, isLoading, isUpdating, quickEdit} = this.state;
 
         return (
             <Fragment>
@@ -164,7 +253,7 @@ class AllLotterySlots extends Component {
                     transitionLeave={false}>
                     <div>
                         <PageTitle
-                            heading="All Lottery Slots"
+                            heading="All Currencies"
                             subheading="Choose between regular React Bootstrap tables or advanced dynamic ones."
                             icon="pe-7s-medal icon-gradient bg-tempting-azure"
                         />
@@ -198,56 +287,12 @@ class AllLotterySlots extends Component {
                                             {
                                                 columns: [
                                                     {
-                                                        Header: 'Slot Ref',
-                                                        accessor: 'slot_ref'
+                                                        Header: 'Currency',
+                                                        accessor: 'currency'
                                                     },
                                                     {
-                                                        Header: 'Start Time',
-                                                        accessor: 'start_time'
-                                                    },
-                                                    {
-                                                        Header: 'End Time',
-                                                        accessor: 'end_time'
-                                                    },
-                                                    {
-                                                        Header: 'Has Winner',
-                                                        accessor: 'has_winner',
-                                                        Cell: row => (
-                                                            <div className="d-block w-100 text-center">
-                                                                {row.value > 0 ? 'Yes' : 'No'}
-                                                            </div>
-                                                        ),
-                                                    },
-                                                    {
-                                                        Header: 'Total Participants',
-                                                        accessor: 'total_participants'
-                                                    },
-                                                    {
-                                                        Header: 'Total Amount',
-                                                        accessor: 'total_amount',
-                                                        Cell: props => (
-                                                            <div>
-                                                                { inCurrency(props.value) }
-                                                            </div>
-                                                        )
-                                                    },
-                                                    {
-                                                        Header: 'Result',
-                                                        accessor: 'result',
-                                                        Cell: props => (
-                                                            <div className="d-block w-100 text-center">
-                                                                {props.original.result}
-                                                            </div>
-                                                        ),
-                                                    },
-                                                    {
-                                                        Header: 'Status',
-                                                        accessor: 'status',
-                                                        Cell: row => (
-                                                            <div className="d-block w-100 text-center">
-                                                                {row.value > 0 ? 'Active' : 'Inactive'}
-                                                            </div>
-                                                        ),
+                                                        Header: 'Value in bits',
+                                                        accessor: 'value_in_bits'
                                                     },
                                                 ]
                                             },
@@ -266,9 +311,13 @@ class AllLotterySlots extends Component {
                                                                     </DropdownToggle>
                                                                     <DropdownMenu
                                                                         className="rm-pointers dropdown-menu-hover-link">
-                                                                        <DropdownItem onClick={() => this.showDetail(props.original.id)}>
+                                                                        <DropdownItem onClick={() => this.showQuickEditBox(props.original)}>
                                                                             <i className="dropdown-icon lnr-inbox"> </i>
-                                                                            <span>View Detail</span>
+                                                                            <span>Edit</span>
+                                                                        </DropdownItem>
+                                                                        <DropdownItem onClick={() => this.showDeleteConfirmationBox(props.original.id)}>
+                                                                            <i className="dropdown-icon lnr-file-empty"> </i>
+                                                                            <span>Delete</span>
                                                                         </DropdownItem>
                                                                     </DropdownMenu>
                                                                 </UncontrolledButtonDropdown>
@@ -287,19 +336,73 @@ class AllLotterySlots extends Component {
                                         defaultPageSize={perPage}
                                         filterable={true}
                                         className="-striped -highlight"
-                                        minRows={1}
                                     />
                                 </CardBody>
                             </Card>
                         </Col>
                     </Row>
+                    <SweetAlert
+                        title="Are you sure?"
+                        confirmButtonColor=""
+                        show={this.state.showDeleteConfirmationBox}
+                        text="You will not be able to recover these data!"
+                        type="error"
+                        showCancelButton
+                        onConfirm={this.handleDelete}
+                        onCancel={() => this.setState({showDeleteConfirmationBox: false})}/>
+
+                    <SweetAlert
+                        title="Deleted"
+                        confirmButtonColor=""
+                        show={this.state.showDeleteCompletionBox}
+                        text="Your imaginary file has been deleted."
+                        type="error"
+                        onConfirm={() => this.setState({showDeleteConfirmationBox: false, showDeleteCompletionBox: false})}/>
+
+                    <Rodal visible={this.state.showQuickEditBox}
+                           onClose={this.cancelQuickEdit}
+                           animation={"fade"}
+                           showMask={true}
+                    >
+                        <ModalHeader>Edit</ModalHeader>
+                        <ModalBody>
+                            <AvForm onSubmit={this.handleLogin}>
+                                <Row form>
+                                    <Col md={12}>
+                                        <FormGroup>
+                                            <AvGroup>
+                                                <AvField type="text" name="currency" label="Currency"
+                                                         onChange={this.handleChange}
+                                                         value={quickEdit.currency}
+                                                />
+                                                <AvField type="text" name="valueInBits" label="Value in Bits"
+                                                         onChange={this.handleChange}
+                                                         value={quickEdit.valueInBits}
+                                                />
+                                            </AvGroup>
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                            </AvForm>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button color="link" onClick={this.cancelQuickEdit}>Cancel</Button>
+                            <Button color="primary" onClick={this.handleQuickEdit}>
+                                { isUpdating ?
+                                    <Loader type="ball-beat" style={{transform: 'scale(0.3)'}} color="white"/>
+                                    :
+                                    "Update"
+                                }
+                            </Button>
+                        </ModalFooter>
+                    </Rodal>
                 </ReactCSSTransitionGroup>
             </Fragment>
         )
     }
 }
 
-AllLotterySlots.propTypes = {
+AllCurrencies.propTypes = {
     makeRequest: PropTypes.func.isRequired,
 };
 
@@ -314,4 +417,4 @@ function mapStateToProps(state) {
 
 export default withRouter(connect(mapStateToProps, {
     makeRequest,
-})(AllLotterySlots));
+})(AllCurrencies));

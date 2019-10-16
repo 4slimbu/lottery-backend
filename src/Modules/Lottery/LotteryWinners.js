@@ -12,6 +12,7 @@ import {Card, CardBody, Col, Row} from 'reactstrap';
 import ReactTable from "react-table";
 import PageTitle from '../../Layout/AppMain/PageTitle';
 import {MESSAGES} from "../../constants/messages";
+import {inCurrency} from "../../utils/helper/helperFunctions";
 
 
 class LotteryWinners extends Component {
@@ -184,16 +185,7 @@ class LotteryWinners extends Component {
                                                         accessor: 'won_amount',
                                                         Cell: props => (
                                                             <div className="d-block w-100 text-center">
-                                                                {props.original.won_amount}
-                                                            </div>
-                                                        ),
-                                                    },
-                                                    {
-                                                        Header: 'Service Charge',
-                                                        accessor: 'service_charge',
-                                                        Cell: props => (
-                                                            <div className="d-block w-100 text-center">
-                                                                {props.original.service_charge}
+                                                                {inCurrency(props.original.won_amount * 1 + props.original.service_charge * 1)}
                                                             </div>
                                                         ),
                                                     },
