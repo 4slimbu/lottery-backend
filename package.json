@@ -1,14 +1,10 @@
 {
-  "name": "kryptto-backend",
+  "name": "lotterycamp-backend",
   "version": "0.4.0",
   "private": true,
-  "description": "Kryptto Backend",
-  "author": "responsive-pixel.com",
-  "homepage": "https://backend.kryptto.io",
-  "repository": {
-    "type": "git",
-    "url": "git+https://bitbucket.org/responsivesudip/lottery-backend"
-  },
+  "description": "Lotterycamp Backend",
+  "author": "sudiplimbu.com",
+  "homepage": "https://backend.lotterycamp.com",
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.8",
     "@fortawesome/fontawesome-free": "^5.8.1",
