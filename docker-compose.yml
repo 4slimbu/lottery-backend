@@ -1,0 +1,17 @@
+version: "3.7"
+services:
+    app:
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: limvus/lottery-backend
+        container_name: lottery-back-app
+        restart: unless-stopped
+        ports:
+            - 3001:80
+        networks:
+            - lottery
+
+networks:
+    lottery:
+        driver: bridge        
