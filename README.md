@@ -1,25 +1,36 @@
 # Lottery-Backend
-Backend for [lotterycamp](https://github.com/limvus/lotterycamp.git).
+Backend for [lotterycamp](https://github.com/limvus/lotterycamp.git) project.
 
-# Requirements
+## Requirements
 - docker [or]
 - node >= 12.7.0
 - npm >= 6.10.0
 
 Note: can use nvm to manage node version
 
-# Installation using docker
+## Setup Config
+Uses [react-app-env](https://www.npmjs.com/package/react-app-env) to manage config.
+```
+# copy dev config
+cp env.example development.env
+
+# copy prod config (for docker)
+cp env.example production.env
+```
+
+## Installation using docker
+For now docker installation creates production build only.
 ```
 # run app 
 docker-compose up -d
 
 # stop and remove containers
-docker-comose down 
+docker-compose down 
 
 # if necessary, rebuild app 
 docker-compose build app
 ```
-# Installation without docker
+## Installation without docker
 ```
 # install dependencies
 npm install
