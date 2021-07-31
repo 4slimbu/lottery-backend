@@ -1,17 +1,17 @@
 version: "3.7"
 services:
-    app:
-        build:
-            context: ./
-            dockerfile: Dockerfile
-        image: limvus/lottery-backend
-        container_name: lottery-back-app
-        restart: unless-stopped
-        ports:
-            - 3001:80
-        networks:
-            - lottery
+  app:
+    image: nginx:alpine
+    container_name: lottery-backend-app
+    restart: unless-stopped
+    environment:
+      - VIRTUAL_HOST=backend.lotterycamp.local
+      - LETSENCRYPT_HOST=backend.lotterycamp.local
+    volumes:
+      - ./:/var/www
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
 
 networks:
-    lottery:
-        driver: bridge        
+  default:
+    external:
+      name: projects_default
