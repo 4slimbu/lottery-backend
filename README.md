@@ -14,15 +14,28 @@ Uses [react-app-env](https://www.npmjs.com/package/react-app-env) to manage conf
 # copy dev config
 cp env.example development.env
 
-# copy prod config (for docker)
+# copy prod config
 cp env.example production.env
-```
 
-## Installation using docker
-For now docker installation creates production build only.
-```
+# update env variables as per local or prod then run:
+npm install 
+npm start (for local development)
+app will be available at: localhost:3000
+
+# for production
+# add vhost in /etc/hosts
+127.0.0.1 backend.lotterycamp.com # prod
+127.0.0.1 backend.lotterycamp.local # local dev
+
+# in docker-compose.yml update environment variables in nginx server container
+environments:
+  - VIRTUAL_HOST=backend.lotterycamp.com
+  - LETSENCRYPT_HOST=backend.lotterycamp.com
+
 # run app 
+npm run build
 docker-compose up -d
+app will be available at: https://backend.lotterycamp.com
 
 # stop and remove containers
 docker-compose down 
@@ -30,17 +43,10 @@ docker-compose down
 # if necessary, rebuild app 
 docker-compose build app
 ```
-## Installation without docker
-```
-# install dependencies
-npm install
-
-# run in dev mode
-npm start
-
-# create production build
-npm run-script build
-```
+## Key Info
+- for rebranding, replace all variation of lotterycamp
+- replace logo|favicon (src/assets/images|public/index.js)
+- replace logo link in scss/**
 
 ## Contribution
 If you want to contribute, just fork the repository and play around, create 
